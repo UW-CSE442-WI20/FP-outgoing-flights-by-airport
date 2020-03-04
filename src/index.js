@@ -19,10 +19,14 @@ const exampleData = require('./example-data.json');
 
 // Anything you put in the static folder will be available
 // over the network, e.g.*/
-d3.csv(getFile, d =>{
-    sqldata.push([+d.city]);
-}).then(d => {
+var types = [];
+d3.csv(getFile, function(d){
+    return {
+      type : d.AirPort
+    };
+}).then(function(data) {
     //console.log('Dynamically loaded CSV data', data);
+    var ap = distinct_Types(data);
     var select = d3.select(".dropdown")
       .append("div")
       .append("select")
@@ -34,7 +38,7 @@ d3.csv(getFile, d =>{
       });
 
     select.selectAll("option")
-      .data(sqldata)
+      .data(ap)
       .enter()
         .append("option")
         .attr("class", "dropdown")
@@ -49,5 +53,13 @@ function toProperCase(value) {
   }
   return result;
 }
-
+// distint and sort the data
+function distinct_Types(rows) {
+  for(var i = 0; i < rows.length; i++) {
+    types[i] = rows[i].type;
+  }
+  types = [...new Set(types)].sort();
+  types.unshift("Please Select an AirPort");
+  return types;
+}
 
