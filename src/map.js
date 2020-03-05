@@ -9,6 +9,7 @@ Names:  Anika Padwekar
 Sources:    https://github.com/UW-CSE442-WI20/A3-accidents-in-the-us (1)
             http://bl.ocks.org/almccon/1bcde7452450c153d8a0684085f249fd (2)
 */
+var d3 = require('d3');
 
 // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 var map = L
@@ -21,3 +22,56 @@ L.tileLayer(
     maxZoom: 19,
     minZoom: 2  // Prevent ths duplicated display of countries on zoom
     }).addTo(map);
+
+var d3 = require('d3');
+
+
+const csvData = require('./grouped_origin_dest.csv');
+
+d3.csv(csvData).then(function(data) {
+    data.forEach(function(d) {
+            d.Origin = d.Origin;
+            d.Dest = d.Dest
+            d.AVG_Time = +d.AVG_Time
+            d.AVG_Distance = +d.AVG_Distance
+            d.Count = +d.Count
+        
+            d.O_lat = +d.O_lat
+            d.O_long = +d.O_long
+            d.D_lat = +d.D_lat
+            d.D_long = +d.D_long
+
+            
+
+        }
+    );
+    draw_data(data);
+});
+
+function draw_data(data){
+
+    console.log(data);
+
+    data.forEach(function(d) {
+        
+
+
+        L.circle([d.O_lat,d.O_long], 10).addTo(map);
+        
+        var pointA = new L.LatLng(d.O_lat, d.O_long);
+        var pointB = new L.LatLng(d.D_lat, d.D_long);
+        var pointList = [pointA, pointB];
+
+        var latlngs = Array()
+        latlngs.push(pointA)
+        latlngs.push(pointB)
+
+        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+
+
+        //L.Polyline(pointList).addTo(map);
+
+    });
+
+}
+
