@@ -1,3 +1,58 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Outgoing Flights by Airport</title><link rel="stylesheet" href="https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/style.4e370590.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""><script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script></head><body> <div class="flex-container2"> <div id="nav"> <a href="https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/index.html">&lt; Return</a> </div>    <div id="map"> <script src="https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/map2.67e38dee.js"></script> </div> <div id="info"> <h1>Detailed Information</h1> <p> The ___ airport flies ___ flights on ___. </p> <p> Flights go to ___ with the most flights into ___ airport. </p> <p> The average flight time is ___ across all flight and the average price is ___ </p> </div>
-</div> <footer> Copyright &copy; 2020 by Anika Padwekar, Khai Tran, Kwing Li, McKinnon Williams, Nicole Garakanidze, All rights reserved.
-</footer> </body></html>
+<!--
+CSE 442: Data Visualization
+Final Project
+Names:  Anika Padwekar
+        Khai Tran
+        Kwing Li
+        McKinnon Williams
+        Nicole Garakanidze
+    -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Outgoing Flights by Airport</title>
+    <link rel="stylesheet" href="https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/style.3a462161.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+</head>
+
+<body>
+
+<div class="flex-container2">
+    <div id="nav">
+        <a href="https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/index.html">&lt; Return</a>
+    </div>
+
+    <!-- Version 1 - using leaflet -->
+    <!--<div id="mapv1">
+        <script src="map.js"></script>
+    </div>-->
+    
+    <!-- Version 2 - using d3 -->
+    <div id="map">
+        <script src="https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/map2.311fec97.js"></script>
+    </div>
+
+    <div id="info">
+        <h1>Detailed Information</h1>
+        <p>
+            The ___ airport flies ___ flights on ___.
+        </p>
+        <p>
+            Flights go to ___ with the most flights into ___ airport.
+        </p>
+        <p>
+            The average flight time is ___ across all flight and the average price is ___
+        </p>
+    </div>
+</div>
+
+<footer>
+    Copyright &copy; 2020 by Anika Padwekar, Khai Tran, Kwing Li, McKinnon Williams, Nicole Garakanidze, All rights
+    reserved.
+</footer>
+
+</body>
+</html>
