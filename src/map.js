@@ -40,12 +40,25 @@ d3.csv(csvData).then(function(data) {
             d.O_long = +d.O_long
             d.D_lat = +d.D_lat
             d.D_long = +d.D_long
-
+            
+            //Need to update the data to remove the wrong sets that point to 0,0
+            if (d.Origin == 'SFB') {
+                d.O_lat = 28.7794
+                d.O_long = -81.2357
+            }
+            if (d.Dest == 'SFB') {
+                d.D_lat = 28.7794
+                d.D_long = -81.2357
+            }
             
 
         }
     );
-    draw_data(data);
+    //draw_data(data)
+    //change this to take in a value from the page where you choose the index
+    draw_data(data.filter(function (row) {
+        return row.Origin == 'SEA'
+    }));
 });
 
 function draw_data(data){
@@ -53,8 +66,6 @@ function draw_data(data){
     console.log(data);
 
     data.forEach(function(d) {
-        
-
 
         L.circle([d.O_lat,d.O_long], 10).addTo(map);
         
@@ -66,11 +77,7 @@ function draw_data(data){
         latlngs.push(pointA)
         latlngs.push(pointB)
 
-        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-
-
-        //L.Polyline(pointList).addTo(map);
-
+        var polyline = L.polyline(latlngs, {color: 'blue', weight: 1}).addTo(map);
     });
 
 }
