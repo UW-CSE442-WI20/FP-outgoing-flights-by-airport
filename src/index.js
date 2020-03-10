@@ -45,6 +45,7 @@ d3.csv(getFile, function(d){
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
   });
+
 function toProperCase(value) {
   var words = value.split(" ");
   var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase(); 

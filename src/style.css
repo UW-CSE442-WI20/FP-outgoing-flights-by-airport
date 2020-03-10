@@ -79,7 +79,7 @@ svg {
   }
 select {
     width: 55%;
-    display: flex;
+    display:block;
     align-content: center;
     flex-wrap: wrap;
     margin-left: 10px;
@@ -96,8 +96,8 @@ select {
       font-family: 'Roboto Mono', monospace;
   }
   
-.grid-container {
-        display: grid;
+.grid-container .form-field {
+        display:inline-block;
         flex-direction: row;
       grid-template-columns: auto auto;
   }
@@ -105,12 +105,11 @@ select {
 	grid-column: 2;
 }
 #filters1 {
-	grid-row: 1;
+	grid-column: 1;
 }
 #filters2 {
-	grid-row: 0;
+	grid-column: 0;
 }
-
 /*.flex-container-2 {*/
 /*display: flex;*/
 /*flex-direction: column;*/
