@@ -33,6 +33,8 @@ d3.csv(getFile, function(d){
 
     select
       .on("change", function(d) {
+        var address = str.concat('main.html?airline=',d3.select(this).property("value"))
+        window.location.href = address;
         var value = d3.select(this).property("value");
         console.log(value);
       });
