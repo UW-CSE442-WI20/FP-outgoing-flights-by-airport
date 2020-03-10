@@ -22,9 +22,11 @@ const exampleData = require('./example-data.json');
 var types = [];
 d3.csv(getFile, function(d){
     return {
-      type : d.AirPort
+      type : d.AirPort,
+      code : d.AirID
     };
 }).then(function(data) {
+    console.log(data)
     //console.log('Dynamically loaded CSV data', data);
     var ap = distinct_Types(data);
     var select = d3.select(".dropdown")
@@ -33,12 +35,18 @@ d3.csv(getFile, function(d){
 
     select
       .on("change", function(d) {
-        var address = 'main.html?airline='
-        var AirPort = d3.select(this).property("value")
-        var address = address.concat(AirPort)
-        window.location.href = address;
-        var value = d3.select(this).property("value");
-        console.log(value);
+        var address = 'main.html?airline=';
+        var AirPort = d3.select(this).property("value");
+        d3.csv(getFile, function(d){
+          if (d.AirPort == AirPort) {
+              return d.AirID;
+        }}).then(v => {
+            address = address.concat(v);
+            console.log(address);
+            window.location.href = address;
+            // returns a promise
+        })
+        //
       });
 
     select.selectAll("option")
@@ -49,6 +57,7 @@ d3.csv(getFile, function(d){
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
   });
+
 function toProperCase(value) {
   var words = value.split(" ");
   var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase(); 
@@ -57,6 +66,7 @@ function toProperCase(value) {
   }
   return result;
 }
+
 // distint and sort the data
 function distinct_Types(rows) {
   for(var i = 0; i < rows.length; i++) {
@@ -65,5 +75,17 @@ function distinct_Types(rows) {
   types = [...new Set(types)].sort();
   types.unshift("Please Select an AirPort");
   return types;
+}
+
+async function asyncCall(airport) {
+  const result = await resolveAfter2Seconds();
+}
+
+function resolveAfter2Seconds() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 2000);
+  });
 }
 
