@@ -2,7 +2,7 @@
 
 // You can require libraries
 const d3 = require('d3');
-const getFile = require('../static/airports.csv');
+const getFile = require('../static/airport_names.csv');
 let sqldata = [];
 let dataSet = sqldata;
 /*// You can include local JS files:
@@ -34,7 +34,7 @@ d3.csv(getFile, function(d){
     select
       .on("change", function(d) {
         var value = d3.select(this).property("value");
-        alert(value);
+        console.log(value);
       });
 
     select.selectAll("option")

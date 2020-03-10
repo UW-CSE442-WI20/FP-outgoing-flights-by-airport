@@ -10,6 +10,10 @@ Sources:    https://github.com/UW-CSE442-WI20/A3-accidents-in-the-us (1)
             http://bl.ocks.org/almccon/1bcde7452450c153d8a0684085f249fd (2)
 */
 var d3 = require('d3');
+var queryString = require('query-string');
+const parsed = queryString.parse(location.search);
+console.log(parsed.airline);
+
 
 // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 var map = L
@@ -57,7 +61,7 @@ d3.csv(csvData).then(function(data) {
     //draw_data(data)
     //change this to take in a value from the page where you choose the index
     draw_data(data.filter(function (row) {
-        return row.Origin == 'SEA'
+        return row.Origin == parsed.airline
     }));
 });
 
