@@ -44,7 +44,6 @@ d3.csv(getFile, function(d){
             address = address.concat(v);
             console.log(address);
             window.location.href = address;
-            // returns a promise
         })
         //
       });
