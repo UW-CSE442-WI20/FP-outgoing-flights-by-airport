@@ -33,7 +33,9 @@ d3.csv(getFile, function(d){
 
     select
       .on("change", function(d) {
-        var address = str.concat('main.html?airline=',d3.select(this).property("value"))
+        var address = 'main.html?airline='
+        var AirPort = d3.select(this).property("value")
+        var address = address.concat(AirPort)
         window.location.href = address;
         var value = d3.select(this).property("value");
         console.log(value);
