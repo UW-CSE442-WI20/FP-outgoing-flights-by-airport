@@ -30,14 +30,14 @@ L.tileLayer(
 var d3 = require('d3');
 
 
-const csvData = require('./grouped_origin_dest.csv');
+const csvData = require('../static/grouped_data.csv');
 
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
             d.Origin = d.Origin;
             d.Dest = d.Dest
-            d.AVG_Time = +d.AVG_Time
-            d.AVG_Distance = +d.AVG_Distance
+            d.Time = +d.Time
+            d.Distance = +d.Distance
             d.Count = +d.Count
         
             d.O_lat = +d.O_lat
@@ -56,8 +56,12 @@ function draw_data(data){
     console.log(data);
 
     data.forEach(function(d) {
-
-        L.circle([d.O_lat,d.O_long], 10).addTo(map);
+        //ABQ 35.0433,-106.6129
+        //ABY 31.5357,-84.1939
+        //BQK 31.2548,-81.4669
+        //SFB 28.7794,-81.2357
+        L.circle([d.O_lat,d.O_long], 10)
+        .addTo(map);
         
         var pointA = new L.LatLng(d.O_lat, d.O_long);
         var pointB = new L.LatLng(d.D_lat, d.D_long);
