@@ -2,7 +2,7 @@
 
 // You can require libraries
 const d3 = require('d3');
-const getFile = require('../static/airports.csv');
+const getFile = require('../static/airport_names.csv');
 let sqldata = [];
 let dataSet = sqldata;
 /*// You can include local JS files:
@@ -22,9 +22,11 @@ const exampleData = require('./example-data.json');
 var types = [];
 d3.csv(getFile, function(d){
     return {
-      type : d.AirPort
+      type : d.AirPort,
+      code : d.AirID
     };
 }).then(function(data) {
+    console.log(data)
     //console.log('Dynamically loaded CSV data', data);
     var ap = distinct_Types(data);
     var select = d3.select(".dropdown")
@@ -33,8 +35,18 @@ d3.csv(getFile, function(d){
 
     select
       .on("change", function(d) {
-        var value = d3.select(this).property("value");
-        alert(value);
+        var address = 'main.html?airline=';
+        var AirPort = d3.select(this).property("value");
+        d3.csv(getFile, function(d){
+          if (d.AirPort == AirPort) {
+              return d.AirID;
+        }}).then(v => {
+            address = address.concat(v);
+            console.log(address);
+            window.location.href = address;
+            // returns a promise
+        })
+        //
       });
 
     select.selectAll("option")
@@ -54,6 +66,7 @@ function toProperCase(value) {
   }
   return result;
 }
+
 // distint and sort the data
 function distinct_Types(rows) {
   for(var i = 0; i < rows.length; i++) {
@@ -62,5 +75,17 @@ function distinct_Types(rows) {
   types = [...new Set(types)].sort();
   types.unshift("Please Select an AirPort");
   return types;
+}
+
+async function asyncCall(airport) {
+  const result = await resolveAfter2Seconds();
+}
+
+function resolveAfter2Seconds() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 2000);
+  });
 }
 
