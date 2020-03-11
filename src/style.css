@@ -128,12 +128,12 @@ text, p, h1, h2, h3, h4, h5, h6 {
 #filters-main {
 grid-column: 2;
 }
-#filters1-main {
+/*#filters1-main {
 grid-row: 1;
 }
 #filters2-main {
 grid-row: 0;
-}
+}*/
 
 /*.flex-container-2 {*/
 /*display: flex;*/

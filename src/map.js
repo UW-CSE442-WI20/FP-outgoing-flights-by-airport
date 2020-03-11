@@ -19,6 +19,7 @@ console.log(parsed.airline);
 var destinations = Array();
 /* Sorted destination airports */
 var types = [];
+var ID_Name = new Map();
 
 // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 var map = L
@@ -55,7 +56,7 @@ d3.csv(csvData).then(function(data) {
         return row.Origin == parsed.airline
     }));
 
-    var select = d3.select(".dropdown")
+    var select = d3.select(".dropdown1")
       .append("div")
       .append("select")
 
@@ -77,7 +78,7 @@ d3.csv(csvData).then(function(data) {
       .data(types)
       .enter()
         .append("option")
-        .attr("class", "dropdown")
+        .attr("class", "dropdown1")
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
 });
@@ -108,10 +109,21 @@ function draw_data(data){
     destinations = distinct_Types(destinations);
     
 }
+d3.csv(getFile, function(d){
+      return {
+      type : d.AirPort,
+      code : d.AirID
+    };
+    }).then(function(data) {
+      for(var i = 0; i < data.length; i++){
+        var id = data[i].code;
+        ID_Name.set(id, data[i].type);
+      }
+    });
 
 function distinct_Types(rows) {
     for(var i = 0; i < rows.length; i++) {
-      types[i] = rows[i];
+      types[i] = ID_Name.get(rows[i]);
     }
     types = [...new Set(types)].sort();
     types.unshift("Please Select an AirPort");
