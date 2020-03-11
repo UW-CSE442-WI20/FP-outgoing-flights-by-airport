@@ -32,7 +32,7 @@ d3.csv(getFile, function(d){
     var select = d3.select(".dropdown")
       .append("div")
       .append("select")
-
+    
     select
       .on("change", function(d) {
         var address = 'main.html?airline=';
@@ -56,6 +56,24 @@ d3.csv(getFile, function(d){
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
   });
+
+  //var months = ["January", "February", "March", "April", "May", "June", "July", "August", "October", "November", "December"]
+  //var selectMonth = d3.select(".dropdown")
+  //  .append("div")
+  //  .append("select")
+  //selectMonth.on("change", function(d) {
+  //  var month = 'main.html?month=';
+  //});
+
+  //selectMonth.selectAll("option")
+  //   .data(months)
+  //  .enter()
+  //    .append("option")
+  //    .attr("class", "dropdown")
+  //    .attr("value", function (d) { return d; })
+  //    .text(return d;)
+//});
+
 
 function toProperCase(value) {
   var words = value.split(" ");
