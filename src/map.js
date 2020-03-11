@@ -12,8 +12,13 @@ Sources:    https://github.com/UW-CSE442-WI20/A3-accidents-in-the-us (1)
 var d3 = require('d3');
 var queryString = require('query-string');
 const parsed = queryString.parse(location.search);
+const getFile = require('../static/airport_names.csv');
 console.log(parsed.airline);
 
+/* Destination airports */
+var destinations = Array();
+/* Sorted destination airports */
+var types = [];
 
 // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 var map = L
@@ -49,6 +54,32 @@ d3.csv(csvData).then(function(data) {
     draw_data(data.filter(function (row) {
         return row.Origin == parsed.airline
     }));
+
+    var select = d3.select(".dropdown")
+      .append("div")
+      .append("select")
+
+    select
+      .on("change", function(d) {
+        // var address = 'main.html?airline=';
+        // var AirPort = d3.select(this).property("value");
+        // d3.csv(getFile, function(d){
+        //   if (d.AirPort == AirPort) {
+        //       return d.AirID;
+        // }}).then(v => {
+        //     address = address.concat(v);
+        //     console.log(address);
+        //     window.location.href = address;
+        // })
+      });
+
+    select.selectAll("option")
+      .data(types)
+      .enter()
+        .append("option")
+        .attr("class", "dropdown")
+        .attr("value", function (d) { return d; })
+        .text(function (d) { return toProperCase(d); });
 });
 
 function draw_data(data){
@@ -56,6 +87,7 @@ function draw_data(data){
     console.log(data);
 
     data.forEach(function(d) {
+        destinations.push(d.Dest);
         //ABQ 35.0433,-106.6129
         //ABY 31.5357,-84.1939
         //BQK 31.2548,-81.4669
@@ -73,4 +105,25 @@ function draw_data(data){
 
         var polyline = L.polyline(latlngs, {color: 'blue', weight: 1}).addTo(map);
     });
+    destinations = distinct_Types(destinations);
+    
 }
+
+function distinct_Types(rows) {
+    for(var i = 0; i < rows.length; i++) {
+      types[i] = rows[i];
+    }
+    types = [...new Set(types)].sort();
+    types.unshift("Please Select an AirPort");
+    console.log(types)
+    return types;
+}
+
+function toProperCase(value) {
+    var words = value.split(" ");
+    var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase(); 
+    for (var i = 1; i < words.length; i++) {
+      result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase(); 
+    }
+    return result;
+  }

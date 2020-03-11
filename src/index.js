@@ -87,4 +87,3 @@ function resolveAfter2Seconds() {
     }, 2000);
   });
 }
-

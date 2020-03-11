@@ -53,6 +53,14 @@ p {
     align-items: flex-start;
 }
 
+.flex-container3 {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
 #nav {
     flex-basis: 100%;
     margin-left: 10px;
@@ -109,6 +117,20 @@ select {
 }
 #filters2 {
 	grid-row: 0;
+}
+
+.grid-container-main {
+    flex-direction: row;
+  grid-template-columns: auto auto;
+}
+#filters-main {
+grid-column: 2;
+}
+#filters1-main {
+grid-row: 1;
+}
+#filters2-main {
+grid-row: 0;
 }
 
 /*.flex-container-2 {*/
