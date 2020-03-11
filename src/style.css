@@ -21,8 +21,10 @@ body {
 }
 
 h1 {
+    text-align: center;
     color: #d1d1d1;
     margin: 25px;
+    font-size: 30px;
 }
 
 footer {
@@ -84,9 +86,9 @@ svg {
     flex-wrap: wrap;
     align-content: center;
     margin: 0 auto;
-  }
+}
 select {
-    width: 55%;
+    width: 100%;
     display: flex;
     align-content: center;
     flex-wrap: wrap;
@@ -98,25 +100,25 @@ select {
     background-color: #f1f1f1;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.342);
     font-family: 'Roboto Mono', monospace;
-  }
-  
-  text, p, h1, h2, h3, h4, h5, h6 {
-      font-family: 'Roboto Mono', monospace;
-  }
-  
+}
+
+text, p, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Mono', monospace;
+}
+
 .grid-container {
-        display: grid;
-        flex-direction: row;
-      grid-template-columns: auto auto;
-  }
+    display: grid;
+    flex-direction: row;
+    grid-template-columns: auto auto;
+}
 #filters {
-	grid-column: 2;
+    grid-column: 2;
 }
 #filters1 {
-	grid-row: 1;
+    grid-row: 1;
 }
 #filters2 {
-	grid-row: 0;
+    grid-row: 0;
 }
 
 .grid-container-main {
