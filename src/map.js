@@ -138,4 +138,13 @@ function toProperCase(value) {
       result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase(); 
     }
     return result;
-  }
+}
+
+// Sets values to be displayed on HTML
+setTimeout(function() {
+    var airportName = parsed.airline;
+    document.getElementById("airportName").innerHTML = airportName;
+
+    var numFlights = 0;
+    document.getElementById("numFlights").innerText = numFlights;
+}, 500);
