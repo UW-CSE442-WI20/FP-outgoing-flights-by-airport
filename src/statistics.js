@@ -1,4 +1,5 @@
 var d3 = require('d3');
+//const datePattern = /\.*-(\d{01})-\.*/;
 
 // Graph visualization copied from example found at:
 // https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
@@ -19,22 +20,25 @@ var svg = d3.select("body").append("svg")
     .attr("transform", 
           "translate(" + margin.left + "," + margin.top + ")");
 
-const csvData = require('../static/grouped_data.csv');
+// Default will be set to january flights, need to change file
+// based on selected month
+const csvData = require('../static/jan.csv');
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
         d.Dest = d.Dest
-        d.Time = +d.Time
+        d.Date = d.Date
+        console.log(d.Date)
         d.Distance = +d.Distance
         d.Count = +d.Count    
     });
     
   const results = data.filter(function (row) {
-    return (row.Origin == 'SEA' && row.Dest == 'ORD')
+    return (row.Origin == 'SEA' && row.Dest == 'ORD') // Need to change ariports based on selection
   });
 
   console.log(results);
-  x.domain(results.map(function(d) { return d.Time; }));
+  x.domain(results.map(function(d) { return d.Date; }));
   y.domain([0, d3.max(results, function(d) { return d.Count; })]);
   
 
@@ -43,7 +47,7 @@ d3.csv(csvData).then(function(data) {
       .data(results)
     .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.Time); })
+      .attr("x", function(d) { return x(d.Date); })
       .attr("width", x.bandwidth())
       .attr("y", function(d) { return y(d.Count); })
       .attr("height", function(d) { return height - y(d.Count); });
@@ -51,7 +55,10 @@ d3.csv(csvData).then(function(data) {
   //x axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).ticks(10))
+      .selectAll("text")	
+        .style("text-anchor", "end")
+        .attr("transform", "rotate(-65)");
 
   // y axis
   svg.append("g")
