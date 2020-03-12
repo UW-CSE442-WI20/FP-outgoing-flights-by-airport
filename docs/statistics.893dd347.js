@@ -28630,131 +28630,57 @@ Object.keys(_d3Zoom).forEach(function (key) {
     }
   });
 });
-},{"./dist/package.js":"pT13","d3-array":"K0bd","d3-axis":"mp0m","d3-brush":"tkh5","d3-chord":"Iy8J","d3-collection":"S3hn","d3-color":"Peej","d3-contour":"SiBy","d3-dispatch":"D3zY","d3-drag":"kkdU","d3-dsv":"EC2w","d3-ease":"pJ11","d3-fetch":"grWT","d3-force":"oYRE","d3-format":"VuZR","d3-geo":"Ah6W","d3-hierarchy":"Kps6","d3-interpolate":"k9aH","d3-path":"OTyq","d3-polygon":"H15P","d3-quadtree":"lUbg","d3-random":"Gz2j","d3-scale":"zL2z","d3-scale-chromatic":"ado2","d3-selection":"ysDv","d3-shape":"maww","d3-time":"hQYG","d3-time-format":"UYpZ","d3-timer":"rdzS","d3-transition":"UqVV","d3-voronoi":"rLIC","d3-zoom":"MHdZ"}],"TLdC":[function(require,module,exports) {
-module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/airport_names.d42b6543.csv";
-},{}],"Focm":[function(require,module,exports) {
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-// You can require libraries
-var d3 = require('d3');
-
-var getFile = require('../static/airport_names.csv');
-
-var sqldata = [];
-var dataSet = sqldata;
-/*// You can include local JS files:
-const MyClass = require('./my-class');
-const myClassInstance = new MyClass();
-myClassInstance.sayHi();
+},{"./dist/package.js":"pT13","d3-array":"K0bd","d3-axis":"mp0m","d3-brush":"tkh5","d3-chord":"Iy8J","d3-collection":"S3hn","d3-color":"Peej","d3-contour":"SiBy","d3-dispatch":"D3zY","d3-drag":"kkdU","d3-dsv":"EC2w","d3-ease":"pJ11","d3-fetch":"grWT","d3-force":"oYRE","d3-format":"VuZR","d3-geo":"Ah6W","d3-hierarchy":"Kps6","d3-interpolate":"k9aH","d3-path":"OTyq","d3-polygon":"H15P","d3-quadtree":"lUbg","d3-random":"Gz2j","d3-scale":"zL2z","d3-scale-chromatic":"ado2","d3-selection":"ysDv","d3-shape":"maww","d3-time":"hQYG","d3-time-format":"UYpZ","d3-timer":"rdzS","d3-transition":"UqVV","d3-voronoi":"rLIC","d3-zoom":"MHdZ"}],"XB8O":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/grouped_data.ad13bbfc.csv";
+},{}],"iwL0":[function(require,module,exports) {
+var d3 = require('d3'); // Graph visualization copied from example found at:
+// https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
 
-// You can load JSON files directly via require.
-// Note this does not add a network request, it adds
-// the data directly to your JavaScript bundle.
-const exampleData = require('./example-data.json');
+var margin = {
+  top: 20,
+  right: 20,
+  bottom: 30,
+  left: 40
+},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+var x = d3.scaleBand().range([0, width]).padding(0.1);
+var y = d3.scaleLinear().range([height, 0]);
+var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var csvData = require('../static/grouped_data.csv');
 
-// Anything you put in the static folder will be available
-// over the network, e.g.*/
-
-var types = [];
-d3.csv(getFile, function (d) {
-  return {
-    type: d.AirPort,
-    code: d.AirID
-  };
-}).then(function (data) {
-  console.log(data); //console.log('Dynamically loaded CSV data', data);
-
-  var ap = distinct_Types(data);
-  var select = d3.select(".dropdown").append("div").append("select");
-  select.on("change", function (d) {
-    var address = 'main.html?airline=';
-    var AirPort = d3.select(this).property("value");
-    d3.csv(getFile, function (d) {
-      if (d.AirPort == AirPort) {
-        return d.AirID;
-      }
-    }).then(function (v) {
-      address = address.concat(v);
-      console.log(address);
-      window.location.href = address;
-    }); //
+d3.csv(csvData).then(function (data) {
+  data.forEach(function (d) {
+    d.Origin = d.Origin;
+    d.Dest = d.Dest;
+    d.Time = +d.Time;
+    d.Distance = +d.Distance;
+    d.Count = +d.Count;
   });
-  select.selectAll("option").data(ap).enter().append("option").attr("class", "dropdown").attr("value", function (d) {
-    return d;
-  }).text(function (d) {
-    return toProperCase(d);
+  var results = data.filter(function (row) {
+    return row.Origin == 'SEA' && row.Dest == 'ORD';
   });
-});
-
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-
-  return result;
-} // distint and sort the data
-
-
-function distinct_Types(rows) {
-  for (var i = 0; i < rows.length; i++) {
-    types[i] = rows[i].type;
-  }
-
-  types = _toConsumableArray(new Set(types)).sort();
-  types.unshift("Please Select an AirPort");
-  return types;
-}
-
-function asyncCall(_x) {
-  return _asyncCall.apply(this, arguments);
-}
-
-function _asyncCall() {
-  _asyncCall = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(airport) {
-    var result;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return resolveAfter2Seconds();
-
-          case 2:
-            result = _context.sent;
-
-          case 3:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
+  console.log(results);
+  x.domain(results.map(function (d) {
+    return d.Time;
   }));
-  return _asyncCall.apply(this, arguments);
-}
+  y.domain([0, d3.max(results, function (d) {
+    return d.Count;
+  })]); // add bars
 
-function resolveAfter2Seconds() {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve('resolved');
-    }, 2000);
-  });
-}
-},{"d3":"UzF0","../static/airport_names.csv":"TLdC"}]},{},["Focm"], null)
-//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/src.1fb43772.js.map
+  svg.selectAll(".bar").data(results).enter().append("rect").attr("class", "bar").attr("x", function (d) {
+    return x(d.Time);
+  }).attr("width", x.bandwidth()).attr("y", function (d) {
+    return y(d.Count);
+  }).attr("height", function (d) {
+    return height - y(d.Count);
+  }); //x axis
+
+  svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x)); // y axis
+
+  svg.append("g").call(d3.axisLeft(y));
+});
+},{"d3":"UzF0","../static/grouped_data.csv":"XB8O"}]},{},["iwL0"], null)
+//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/statistics.893dd347.js.map

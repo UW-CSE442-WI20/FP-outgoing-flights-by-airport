@@ -28630,488 +28630,13 @@ Object.keys(_d3Zoom).forEach(function (key) {
     }
   });
 });
-},{"./dist/package.js":"pT13","d3-array":"K0bd","d3-axis":"mp0m","d3-brush":"tkh5","d3-chord":"Iy8J","d3-collection":"S3hn","d3-color":"Peej","d3-contour":"SiBy","d3-dispatch":"D3zY","d3-drag":"kkdU","d3-dsv":"EC2w","d3-ease":"pJ11","d3-fetch":"grWT","d3-force":"oYRE","d3-format":"VuZR","d3-geo":"Ah6W","d3-hierarchy":"Kps6","d3-interpolate":"k9aH","d3-path":"OTyq","d3-polygon":"H15P","d3-quadtree":"lUbg","d3-random":"Gz2j","d3-scale":"zL2z","d3-scale-chromatic":"ado2","d3-selection":"ysDv","d3-shape":"maww","d3-time":"hQYG","d3-time-format":"UYpZ","d3-timer":"rdzS","d3-transition":"UqVV","d3-voronoi":"rLIC","d3-zoom":"MHdZ"}],"A2is":[function(require,module,exports) {
-'use strict';
-
-module.exports = str => encodeURIComponent(str).replace(/[!'()*]/g, x => "%".concat(x.charCodeAt(0).toString(16).toUpperCase()));
-},{}],"pWxZ":[function(require,module,exports) {
-'use strict';
-
-var token = '%[a-f0-9]{2}';
-var singleMatcher = new RegExp(token, 'gi');
-var multiMatcher = new RegExp('(' + token + ')+', 'gi');
-
-function decodeComponents(components, split) {
-  try {
-    // Try to decode the entire string first
-    return decodeURIComponent(components.join(''));
-  } catch (err) {// Do nothing
-  }
-
-  if (components.length === 1) {
-    return components;
-  }
-
-  split = split || 1; // Split the array in 2 parts
-
-  var left = components.slice(0, split);
-  var right = components.slice(split);
-  return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
-}
-
-function decode(input) {
-  try {
-    return decodeURIComponent(input);
-  } catch (err) {
-    var tokens = input.match(singleMatcher);
-
-    for (var i = 1; i < tokens.length; i++) {
-      input = decodeComponents(tokens, i).join('');
-      tokens = input.match(singleMatcher);
-    }
-
-    return input;
-  }
-}
-
-function customDecodeURIComponent(input) {
-  // Keep track of all the replacements and prefill the map with the `BOM`
-  var replaceMap = {
-    '%FE%FF': '\uFFFD\uFFFD',
-    '%FF%FE': '\uFFFD\uFFFD'
-  };
-  var match = multiMatcher.exec(input);
-
-  while (match) {
-    try {
-      // Decode as big chunks as possible
-      replaceMap[match[0]] = decodeURIComponent(match[0]);
-    } catch (err) {
-      var result = decode(match[0]);
-
-      if (result !== match[0]) {
-        replaceMap[match[0]] = result;
-      }
-    }
-
-    match = multiMatcher.exec(input);
-  } // Add `%C2` at the end of the map to make sure it does not replace the combinator before everything else
-
-
-  replaceMap['%C2'] = '\uFFFD';
-  var entries = Object.keys(replaceMap);
-
-  for (var i = 0; i < entries.length; i++) {
-    // Replace all decoded components
-    var key = entries[i];
-    input = input.replace(new RegExp(key, 'g'), replaceMap[key]);
-  }
-
-  return input;
-}
-
-module.exports = function (encodedURI) {
-  if (typeof encodedURI !== 'string') {
-    throw new TypeError('Expected `encodedURI` to be of type `string`, got `' + typeof encodedURI + '`');
-  }
-
-  try {
-    encodedURI = encodedURI.replace(/\+/g, ' '); // Try the built in decoder first
-
-    return decodeURIComponent(encodedURI);
-  } catch (err) {
-    // Fallback to a more advanced decoder
-    return customDecodeURIComponent(encodedURI);
-  }
-};
-},{}],"t7Jq":[function(require,module,exports) {
-'use strict';
-
-module.exports = function (string, separator) {
-  if (!(typeof string === 'string' && typeof separator === 'string')) {
-    throw new TypeError('Expected the arguments to be of type `string`');
-  }
-
-  if (separator === '') {
-    return [string];
-  }
-
-  var separatorIndex = string.indexOf(separator);
-
-  if (separatorIndex === -1) {
-    return [string];
-  }
-
-  return [string.slice(0, separatorIndex), string.slice(separatorIndex + separator.length)];
-};
-},{}],"FvpG":[function(require,module,exports) {
-'use strict';
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function (obj) { return typeof obj; }; } else { _typeof = function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-var strictUriEncode = require('strict-uri-encode');
-
-var decodeComponent = require('decode-uri-component');
-
-var splitOnFirst = require('split-on-first');
-
-function encoderForArrayFormat(options) {
-  switch (options.arrayFormat) {
-    case 'index':
-      return function (key) {
-        return function (result, value) {
-          var index = result.length;
-
-          if (value === undefined || options.skipNull && value === null) {
-            return result;
-          }
-
-          if (value === null) {
-            return [].concat(_toConsumableArray(result), [[encode(key, options), '[', index, ']'].join('')]);
-          }
-
-          return [].concat(_toConsumableArray(result), [[encode(key, options), '[', encode(index, options), ']=', encode(value, options)].join('')]);
-        };
-      };
-
-    case 'bracket':
-      return function (key) {
-        return function (result, value) {
-          if (value === undefined || options.skipNull && value === null) {
-            return result;
-          }
-
-          if (value === null) {
-            return [].concat(_toConsumableArray(result), [[encode(key, options), '[]'].join('')]);
-          }
-
-          return [].concat(_toConsumableArray(result), [[encode(key, options), '[]=', encode(value, options)].join('')]);
-        };
-      };
-
-    case 'comma':
-    case 'separator':
-      return function (key) {
-        return function (result, value) {
-          if (value === null || value === undefined || value.length === 0) {
-            return result;
-          }
-
-          if (result.length === 0) {
-            return [[encode(key, options), '=', encode(value, options)].join('')];
-          }
-
-          return [[result, encode(value, options)].join(options.arrayFormatSeparator)];
-        };
-      };
-
-    default:
-      return function (key) {
-        return function (result, value) {
-          if (value === undefined || options.skipNull && value === null) {
-            return result;
-          }
-
-          if (value === null) {
-            return [].concat(_toConsumableArray(result), [encode(key, options)]);
-          }
-
-          return [].concat(_toConsumableArray(result), [[encode(key, options), '=', encode(value, options)].join('')]);
-        };
-      };
-  }
-}
-
-function parserForArrayFormat(options) {
-  var result;
-
-  switch (options.arrayFormat) {
-    case 'index':
-      return function (key, value, accumulator) {
-        result = /\[(\d*)\]$/.exec(key);
-        key = key.replace(/\[\d*\]$/, '');
-
-        if (!result) {
-          accumulator[key] = value;
-          return;
-        }
-
-        if (accumulator[key] === undefined) {
-          accumulator[key] = {};
-        }
-
-        accumulator[key][result[1]] = value;
-      };
-
-    case 'bracket':
-      return function (key, value, accumulator) {
-        result = /(\[\])$/.exec(key);
-        key = key.replace(/\[\]$/, '');
-
-        if (!result) {
-          accumulator[key] = value;
-          return;
-        }
-
-        if (accumulator[key] === undefined) {
-          accumulator[key] = [value];
-          return;
-        }
-
-        accumulator[key] = [].concat(accumulator[key], value);
-      };
-
-    case 'comma':
-    case 'separator':
-      return function (key, value, accumulator) {
-        var isArray = typeof value === 'string' && value.split('').indexOf(options.arrayFormatSeparator) > -1;
-        var newValue = isArray ? value.split(options.arrayFormatSeparator).map(function (item) {
-          return decode(item, options);
-        }) : value === null ? value : decode(value, options);
-        accumulator[key] = newValue;
-      };
-
-    default:
-      return function (key, value, accumulator) {
-        if (accumulator[key] === undefined) {
-          accumulator[key] = value;
-          return;
-        }
-
-        accumulator[key] = [].concat(accumulator[key], value);
-      };
-  }
-}
-
-function validateArrayFormatSeparator(value) {
-  if (typeof value !== 'string' || value.length !== 1) {
-    throw new TypeError('arrayFormatSeparator must be single character string');
-  }
-}
-
-function encode(value, options) {
-  if (options.encode) {
-    return options.strict ? strictUriEncode(value) : encodeURIComponent(value);
-  }
-
-  return value;
-}
-
-function decode(value, options) {
-  if (options.decode) {
-    return decodeComponent(value);
-  }
-
-  return value;
-}
-
-function keysSorter(input) {
-  if (Array.isArray(input)) {
-    return input.sort();
-  }
-
-  if (_typeof(input) === 'object') {
-    return keysSorter(Object.keys(input)).sort(function (a, b) {
-      return Number(a) - Number(b);
-    }).map(function (key) {
-      return input[key];
-    });
-  }
-
-  return input;
-}
-
-function removeHash(input) {
-  var hashStart = input.indexOf('#');
-
-  if (hashStart !== -1) {
-    input = input.slice(0, hashStart);
-  }
-
-  return input;
-}
-
-function getHash(url) {
-  var hash = '';
-  var hashStart = url.indexOf('#');
-
-  if (hashStart !== -1) {
-    hash = url.slice(hashStart);
-  }
-
-  return hash;
-}
-
-function extract(input) {
-  input = removeHash(input);
-  var queryStart = input.indexOf('?');
-
-  if (queryStart === -1) {
-    return '';
-  }
-
-  return input.slice(queryStart + 1);
-}
-
-function parseValue(value, options) {
-  if (options.parseNumbers && !Number.isNaN(Number(value)) && typeof value === 'string' && value.trim() !== '') {
-    value = Number(value);
-  } else if (options.parseBooleans && value !== null && (value.toLowerCase() === 'true' || value.toLowerCase() === 'false')) {
-    value = value.toLowerCase() === 'true';
-  }
-
-  return value;
-}
-
-function parse(input, options) {
-  options = Object.assign({
-    decode: true,
-    sort: true,
-    arrayFormat: 'none',
-    arrayFormatSeparator: ',',
-    parseNumbers: false,
-    parseBooleans: false
-  }, options);
-  validateArrayFormatSeparator(options.arrayFormatSeparator);
-  var formatter = parserForArrayFormat(options); // Create an object with no prototype
-
-  var ret = Object.create(null);
-
-  if (typeof input !== 'string') {
-    return ret;
-  }
-
-  input = input.trim().replace(/^[?#&]/, '');
-
-  if (!input) {
-    return ret;
-  }
-
-  for (var param of input.split('&')) {
-    var [key, value] = splitOnFirst(options.decode ? param.replace(/\+/g, ' ') : param, '='); // Missing `=` should be `null`:
-    // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-
-    value = value === undefined ? null : options.arrayFormat === 'comma' ? value : decode(value, options);
-    formatter(decode(key, options), value, ret);
-  }
-
-  for (var _key of Object.keys(ret)) {
-    var _value = ret[_key];
-
-    if (_typeof(_value) === 'object' && _value !== null) {
-      for (var k of Object.keys(_value)) {
-        _value[k] = parseValue(_value[k], options);
-      }
-    } else {
-      ret[_key] = parseValue(_value, options);
-    }
-  }
-
-  if (options.sort === false) {
-    return ret;
-  }
-
-  return (options.sort === true ? Object.keys(ret).sort() : Object.keys(ret).sort(options.sort)).reduce(function (result, key) {
-    var value = ret[key];
-
-    if (Boolean(value) && _typeof(value) === 'object' && !Array.isArray(value)) {
-      // Sort object keys, not values
-      result[key] = keysSorter(value);
-    } else {
-      result[key] = value;
-    }
-
-    return result;
-  }, Object.create(null));
-}
-
-exports.extract = extract;
-exports.parse = parse;
-
-exports.stringify = function (object, options) {
-  if (!object) {
-    return '';
-  }
-
-  options = Object.assign({
-    encode: true,
-    strict: true,
-    arrayFormat: 'none',
-    arrayFormatSeparator: ','
-  }, options);
-  validateArrayFormatSeparator(options.arrayFormatSeparator);
-  var formatter = encoderForArrayFormat(options);
-  var objectCopy = Object.assign({}, object);
-
-  if (options.skipNull) {
-    for (var key of Object.keys(objectCopy)) {
-      if (objectCopy[key] === undefined || objectCopy[key] === null) {
-        delete objectCopy[key];
-      }
-    }
-  }
-
-  var keys = Object.keys(objectCopy);
-
-  if (options.sort !== false) {
-    keys.sort(options.sort);
-  }
-
-  return keys.map(function (key) {
-    var value = object[key];
-
-    if (value === undefined) {
-      return '';
-    }
-
-    if (value === null) {
-      return encode(key, options);
-    }
-
-    if (Array.isArray(value)) {
-      return value.reduce(formatter(key), []).join('&');
-    }
-
-    return encode(key, options) + '=' + encode(value, options);
-  }).filter(function (x) {
-    return x.length > 0;
-  }).join('&');
-};
-
-exports.parseUrl = function (input, options) {
-  return {
-    url: removeHash(input).split('?')[0] || '',
-    query: parse(extract(input), options)
-  };
-};
-
-exports.stringifyUrl = function (input, options) {
-  var url = removeHash(input.url).split('?')[0] || '';
-  var queryFromUrl = exports.extract(input.url);
-  var parsedQueryFromUrl = exports.parse(queryFromUrl);
-  var hash = getHash(input.url);
-  var query = Object.assign(parsedQueryFromUrl, input.query);
-  var queryString = exports.stringify(query, options);
-
-  if (queryString) {
-    queryString = "?".concat(queryString);
-  }
-
-  return "".concat(url).concat(queryString).concat(hash);
-};
-},{"strict-uri-encode":"A2is","decode-uri-component":"pWxZ","split-on-first":"t7Jq"}],"TLdC":[function(require,module,exports) {
+},{"./dist/package.js":"pT13","d3-array":"K0bd","d3-axis":"mp0m","d3-brush":"tkh5","d3-chord":"Iy8J","d3-collection":"S3hn","d3-color":"Peej","d3-contour":"SiBy","d3-dispatch":"D3zY","d3-drag":"kkdU","d3-dsv":"EC2w","d3-ease":"pJ11","d3-fetch":"grWT","d3-force":"oYRE","d3-format":"VuZR","d3-geo":"Ah6W","d3-hierarchy":"Kps6","d3-interpolate":"k9aH","d3-path":"OTyq","d3-polygon":"H15P","d3-quadtree":"lUbg","d3-random":"Gz2j","d3-scale":"zL2z","d3-scale-chromatic":"ado2","d3-selection":"ysDv","d3-shape":"maww","d3-time":"hQYG","d3-time-format":"UYpZ","d3-timer":"rdzS","d3-transition":"UqVV","d3-voronoi":"rLIC","d3-zoom":"MHdZ"}],"TLdC":[function(require,module,exports) {
 module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/airport_names.d42b6543.csv";
-},{}],"XB8O":[function(require,module,exports) {
-module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/grouped_data.ad13bbfc.csv";
-},{}],"quTw":[function(require,module,exports) {
+},{}],"Focm":[function(require,module,exports) {
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -29120,112 +28645,58 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-/*
-CSE 442: Data Visualization
-Assignment 3: Interactive Visualization
-Names:  Anika Padwekar
-        Kwing Li
-        McKinnon Williams
-        Nicole Garakanidze
-        Khai Tran
-Sources:    https://github.com/UW-CSE442-WI20/A3-accidents-in-the-us (1)
-            http://bl.ocks.org/almccon/1bcde7452450c153d8a0684085f249fd (2)
-*/
+// You can require libraries
 var d3 = require('d3');
-
-var queryString = require('query-string');
-
-var parsed = queryString.parse(location.search);
 
 var getFile = require('../static/airport_names.csv');
 
-console.log(parsed.airline);
-/* Destination airports */
+var sqldata = [];
+var dataSet = sqldata;
+/*// You can include local JS files:
+const MyClass = require('./my-class');
+const myClassInstance = new MyClass();
+myClassInstance.sayHi();
 
-var destinations = Array();
-/* Sorted destination airports */
 
-var types = []; // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
+// You can load JSON files directly via require.
+// Note this does not add a network request, it adds
+// the data directly to your JavaScript bundle.
+const exampleData = require('./example-data.json');
 
-var map = L.map('mapv1') // Center on US
-.setView([47.396413, -100.095262], 2.7);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  minZoom: 2 // Prevent ths duplicated display of countries on zoom
 
-}).addTo(map);
+// Anything you put in the static folder will be available
+// over the network, e.g.*/
 
-var d3 = require('d3');
-
-var csvData = require('../static/grouped_data.csv');
-
-d3.csv(csvData).then(function (data) {
-  data.forEach(function (d) {
-    d.Origin = d.Origin;
-    d.Dest = d.Dest;
-    d.Time = +d.Time;
-    d.Distance = +d.Distance;
-    d.Count = +d.Count;
-    d.O_lat = +d.O_lat;
-    d.O_long = +d.O_long;
-    d.D_lat = +d.D_lat;
-    d.D_long = +d.D_long;
-  });
-  draw_data(data.filter(function (row) {
-    return row.Origin == parsed.airline;
-  }));
+var typesq = [];
+d3.csv(getFile, function (d) {
+  return {
+    type: d.AirPort,
+    code: d.AirID
+  };
+}).then(function (data) {
+  //console.log(data)
+  //console.log('Dynamically loaded CSV data', data);
+  var ap = distinct_Types(data);
   var select = d3.select(".dropdown").append("div").append("select");
-  select.on("change", function (d) {// var address = 'main.html?airline=';
-    // var AirPort = d3.select(this).property("value");
-    // d3.csv(getFile, function(d){
-    //   if (d.AirPort == AirPort) {
-    //       return d.AirID;
-    // }}).then(v => {
-    //     address = address.concat(v);
-    //     console.log(address);
-    //     window.location.href = address;
-    // })
+  select.on("change", function (d) {
+    var address = 'main.html?airline=';
+    var AirPort = d3.select(this).property("value");
+    d3.csv(getFile, function (d) {
+      if (d.AirPort == AirPort) {
+        return d.AirID;
+      }
+    }).then(function (v) {
+      address = address.concat(v);
+      console.log(address);
+      window.location.href = address;
+    }); //
   });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown").attr("value", function (d) {
+  select.selectAll("option").data(ap).enter().append("option").attr("class", "dropdown").attr("value", function (d) {
     return d;
   }).text(function (d) {
     return toProperCase(d);
   });
 });
-
-function draw_data(data) {
-  console.log(data);
-  data.forEach(function (d) {
-    destinations.push(d.Dest); //ABQ 35.0433,-106.6129
-    //ABY 31.5357,-84.1939
-    //BQK 31.2548,-81.4669
-    //SFB 28.7794,-81.2357
-
-    L.circle([d.O_lat, d.O_long], 10).addTo(map);
-    var pointA = new L.LatLng(d.O_lat, d.O_long);
-    var pointB = new L.LatLng(d.D_lat, d.D_long);
-    var pointList = [pointA, pointB];
-    var latlngs = Array();
-    latlngs.push(pointA);
-    latlngs.push(pointB);
-    var polyline = L.polyline(latlngs, {
-      color: 'blue',
-      weight: 1
-    }).addTo(map);
-  });
-  destinations = distinct_Types(destinations);
-}
-
-function distinct_Types(rows) {
-  for (var i = 0; i < rows.length; i++) {
-    types[i] = rows[i];
-  }
-
-  types = _toConsumableArray(new Set(types)).sort();
-  types.unshift("Please Select an AirPort");
-  console.log(types);
-  return types;
-}
 
 function toProperCase(value) {
   var words = value.split(" ");
@@ -29236,6 +28707,54 @@ function toProperCase(value) {
   }
 
   return result;
+} // distint and sort the data
+
+
+function distinct_Types(rows) {
+  for (var i = 0; i < rows.length; i++) {
+    typesq[i] = rows[i].type;
+  }
+
+  typesq = _toConsumableArray(new Set(typesq)).sort();
+  typesq.unshift("Please Select an AirPort");
+  return typesq;
 }
-},{"d3":"UzF0","query-string":"FvpG","../static/airport_names.csv":"TLdC","../static/grouped_data.csv":"XB8O"}]},{},["quTw"], null)
-//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/map.dc5f848d.js.map
+
+function asyncCall(_x) {
+  return _asyncCall.apply(this, arguments);
+}
+
+function _asyncCall() {
+  _asyncCall = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee(airport) {
+    var result;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return resolveAfter2Seconds();
+
+          case 2:
+            result = _context.sent;
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _asyncCall.apply(this, arguments);
+}
+
+function resolveAfter2Seconds() {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve('resolved');
+    }, 2000);
+  });
+}
+},{"d3":"UzF0","../static/airport_names.csv":"TLdC"}]},{},["Focm"], null)
+//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/src.38101d31.js.map

@@ -28884,133 +28884,59 @@ Object.keys(_d3Zoom).forEach(function (key) {
     }
   });
 });
-},{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"../static/airport_names.csv":[function(require,module,exports) {
-module.exports = "/airport_names.22511235.csv";
-},{}],"index.js":[function(require,module,exports) {
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-// You can require libraries
-var d3 = require('d3');
-
-var getFile = require('../static/airport_names.csv');
-
-var sqldata = [];
-var dataSet = sqldata;
-/*// You can include local JS files:
-const MyClass = require('./my-class');
-const myClassInstance = new MyClass();
-myClassInstance.sayHi();
+},{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"../static/grouped_data.csv":[function(require,module,exports) {
+module.exports = "/grouped_data.bfb1d01c.csv";
+},{}],"statistics.js":[function(require,module,exports) {
+var d3 = require('d3'); // Graph visualization copied from example found at:
+// https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
 
-// You can load JSON files directly via require.
-// Note this does not add a network request, it adds
-// the data directly to your JavaScript bundle.
-const exampleData = require('./example-data.json');
+var margin = {
+  top: 20,
+  right: 20,
+  bottom: 30,
+  left: 40
+},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+var x = d3.scaleBand().range([0, width]).padding(0.1);
+var y = d3.scaleLinear().range([height, 0]);
+var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var csvData = require('../static/grouped_data.csv');
 
-// Anything you put in the static folder will be available
-// over the network, e.g.*/
-
-var typesq = [];
-d3.csv(getFile, function (d) {
-  return {
-    type: d.AirPort,
-    code: d.AirID
-  };
-}).then(function (data) {
-  //console.log(data)
-  //console.log('Dynamically loaded CSV data', data);
-  var ap = distinct_Types(data);
-  var select = d3.select(".dropdown").append("div").append("select");
-  select.on("change", function (d) {
-    var address = 'main.html?airline=';
-    var AirPort = d3.select(this).property("value");
-    d3.csv(getFile, function (d) {
-      if (d.AirPort == AirPort) {
-        return d.AirID;
-      }
-    }).then(function (v) {
-      address = address.concat(v);
-      console.log(address);
-      window.location.href = address;
-    }); //
+d3.csv(csvData).then(function (data) {
+  data.forEach(function (d) {
+    d.Origin = d.Origin;
+    d.Dest = d.Dest;
+    d.Time = +d.Time;
+    d.Distance = +d.Distance;
+    d.Count = +d.Count;
   });
-  select.selectAll("option").data(ap).enter().append("option").attr("class", "dropdown").attr("value", function (d) {
-    return d;
-  }).text(function (d) {
-    return toProperCase(d);
+  var results = data.filter(function (row) {
+    return row.Origin == 'SEA' && row.Dest == 'ORD';
   });
-});
-
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-
-  return result;
-} // distint and sort the data
-
-
-function distinct_Types(rows) {
-  for (var i = 0; i < rows.length; i++) {
-    typesq[i] = rows[i].type;
-  }
-
-  typesq = _toConsumableArray(new Set(typesq)).sort();
-  typesq.unshift("Please Select an AirPort");
-  return typesq;
-}
-
-function asyncCall(_x) {
-  return _asyncCall.apply(this, arguments);
-}
-
-function _asyncCall() {
-  _asyncCall = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(airport) {
-    var result;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return resolveAfter2Seconds();
-
-          case 2:
-            result = _context.sent;
-
-          case 3:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
+  console.log(results);
+  x.domain(results.map(function (d) {
+    return d.Time;
   }));
-  return _asyncCall.apply(this, arguments);
-}
+  y.domain([0, d3.max(results, function (d) {
+    return d.Count;
+  })]); // add bars
 
-function resolveAfter2Seconds() {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve('resolved');
-    }, 2000);
-  });
-}
-},{"d3":"../node_modules/d3/index.js","../static/airport_names.csv":"../static/airport_names.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  svg.selectAll(".bar").data(results).enter().append("rect").attr("class", "bar").attr("x", function (d) {
+    return x(d.Time);
+  }).attr("width", x.bandwidth()).attr("y", function (d) {
+    return y(d.Count);
+  }).attr("height", function (d) {
+    return height - y(d.Count);
+  }); //x axis
+
+  svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x)); // y axis
+
+  svg.append("g").call(d3.axisLeft(y));
+});
+},{"d3":"../node_modules/d3/index.js","../static/grouped_data.csv":"../static/grouped_data.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29214,5 +29140,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
-//# sourceMappingURL=/src.e31bb0bc.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","statistics.js"], null)
+//# sourceMappingURL=/statistics.0e3429a9.js.map

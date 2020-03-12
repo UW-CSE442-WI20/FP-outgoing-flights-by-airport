@@ -29399,7 +29399,8 @@ console.log(parsed.airline);
 var destinations = Array();
 /* Sorted destination airports */
 
-var types = []; // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
+var types = [];
+var ID_Name = new Map(); // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 
 var map = L.map('mapv1') // Center on US
 .setView([47.396413, -100.095262], 2.7);
@@ -29428,7 +29429,7 @@ d3.csv(csvData).then(function (data) {
   draw_data(data.filter(function (row) {
     return row.Origin == parsed.airline;
   }));
-  var select = d3.select(".dropdown").append("div").append("select");
+  var select = d3.select(".dropdown1").append("div").append("select");
   select.on("change", function (d) {// var address = 'main.html?airline=';
     // var AirPort = d3.select(this).property("value");
     // d3.csv(getFile, function(d){
@@ -29440,7 +29441,7 @@ d3.csv(csvData).then(function (data) {
     //     window.location.href = address;
     // })
   });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown").attr("value", function (d) {
+  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
     return d;
   }).text(function (d) {
     return toProperCase(d);
@@ -29470,9 +29471,21 @@ function draw_data(data) {
   destinations = distinct_Types(destinations);
 }
 
+d3.csv(getFile, function (d) {
+  return {
+    type: d.AirPort,
+    code: d.AirID
+  };
+}).then(function (data) {
+  for (var i = 0; i < data.length; i++) {
+    var id = data[i].code;
+    ID_Name.set(id, data[i].type);
+  }
+});
+
 function distinct_Types(rows) {
   for (var i = 0; i < rows.length; i++) {
-    types[i] = rows[i];
+    types[i] = ID_Name.get(rows[i]);
   }
 
   types = _toConsumableArray(new Set(types)).sort();
@@ -29519,7 +29532,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52072" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58614" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

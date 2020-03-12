@@ -128,12 +128,12 @@ text, p, h1, h2, h3, h4, h5, h6 {
 #filters-main {
 grid-column: 2;
 }
-#filters1-main {
+/*#filters1-main {
 grid-row: 1;
 }
 #filters2-main {
 grid-row: 0;
-}
+}*/
 
 /*.flex-container-2 {*/
 /*display: flex;*/
@@ -168,5 +168,6 @@ a:hover {
     fill: #002fff;
     fill-opacity: 0.5;
 }
+.bar { fill: white; }
 
 /*# sourceMappingURL=/style.e308ff8e.css.map */
