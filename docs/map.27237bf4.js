@@ -29429,7 +29429,7 @@ d3.csv(csvData).then(function (data) {
   draw_data(data.filter(function (row) {
     return row.Origin == parsed.airline;
   }));
-  var select = d3.select(".dropdown1").append("div").append("select");
+  var select = d3.select(".dropdown2").append("div").append("select");
   select.on("change", function (d) {// var address = 'main.html?airline=';
     // var AirPort = d3.select(this).property("value");
     // d3.csv(getFile, function(d){
@@ -29441,7 +29441,7 @@ d3.csv(csvData).then(function (data) {
     //     window.location.href = address;
     // })
   });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
+  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown2").attr("value", function (d) {
     return d;
   }).text(function (d) {
     return toProperCase(d);
@@ -29540,7 +29540,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59925" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61944" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -29175,7 +29175,7 @@ d3.csv(csvData).then(function (data) {
   draw_data(data.filter(function (row) {
     return row.Origin == parsed.airline;
   }));
-  var select = d3.select(".dropdown1").append("div").append("select");
+  var select = d3.select(".dropdown2").append("div").append("select");
   select.on("change", function (d) {// var address = 'main.html?airline=';
     // var AirPort = d3.select(this).property("value");
     // d3.csv(getFile, function(d){
@@ -29187,7 +29187,7 @@ d3.csv(csvData).then(function (data) {
     //     window.location.href = address;
     // })
   });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
+  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown2").attr("value", function (d) {
     return d;
   }).text(function (d) {
     return toProperCase(d);
@@ -29259,4 +29259,4 @@ setTimeout(function () {
   document.getElementById("numFlights").innerText = numFlights;
 }, 500);
 },{"d3":"UzF0","query-string":"FvpG","../static/airport_names.csv":"TLdC","../static/grouped_data.csv":"XB8O"}]},{},["quTw"], null)
-//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/map.fcadbb31.js.map
+//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/map.b405b30e.js.map

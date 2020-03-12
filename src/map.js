@@ -56,7 +56,7 @@ d3.csv(csvData).then(function(data) {
         return row.Origin == parsed.airline
     }));
 
-    var select = d3.select(".dropdown1")
+    var select = d3.select(".dropdown2")
       .append("div")
       .append("select")
 
@@ -78,7 +78,7 @@ d3.csv(csvData).then(function(data) {
       .data(types)
       .enter()
         .append("option")
-        .attr("class", "dropdown1")
+        .attr("class", "dropdown2")
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
 });
