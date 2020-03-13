@@ -183,3 +183,13 @@ a:hover {
     fill-opacity: 0.5;
 }
 .bar { fill: white; }
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;								
+    padding: 2px;				
+    font: 16px sans-serif;		
+    background: rgb(0, 139, 139);
+    border-radius: 4px;
+    color: black;	
+  }

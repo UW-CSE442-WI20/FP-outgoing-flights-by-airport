@@ -45,12 +45,14 @@ d3.csv(csvData).then(function(data) {
   // add bars
   svg.selectAll(".bar")
       .data(results)
-    .enter().append("rect")
+      .enter().append("rect")
       .attr("class", "bar")
       .attr("x", function(d) { return x(d.Date); })
       .attr("width", x.bandwidth())
       .attr("y", function(d) { return y(d.Count); })
-      .attr("height", function(d) { return height - y(d.Count); });
+      .attr("height", function(d) { return height - y(d.Count); })
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut)
 
   //x axis
   svg.append("g")
@@ -65,3 +67,34 @@ d3.csv(csvData).then(function(data) {
       .call(d3.axisLeft(y));
 
 });
+// define feagure div for tip
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+// mouse handle the 
+function handleMouseOver(d, i) {
+  toolTipMap(`Name of Airport level ${d.Count} in date: ${d.Date}`);
+  // Use D3 to select element, change color and size
+  d3.select(this).style("opacity", .7);
+
+}
+
+function handleMouseOut(d, i) { 
+  // Use D3 to select element, change color and size
+  //console.log("mouse", this);
+  div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+  d3.select(this).style("opacity", 1);
+}
+
+// mouse click
+function toolTipMap(d){
+  div.transition()    
+        .duration(150)    
+        .style("opacity", .9);
+      div.html(d) 
+        .style("left", (d3.event.pageX) + "px")   
+        .style("top", (d3.event.pageY - 28) + "px");
+}
