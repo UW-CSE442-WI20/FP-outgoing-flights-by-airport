@@ -85,7 +85,7 @@ function updateCSV(month) {
 
 // Default will be set to january flights, need to change file
 // based on selected month
-const csvData = require('../static/2018_grouped_alldates.csv');
+const csvData = require('../static/Months/jan.csv');
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
@@ -96,7 +96,6 @@ d3.csv(csvData).then(function(data) {
         d.Count = +d.Count
     });
 
-   
   const results = data.filter(function (row) {
     return (row.Origin == parsed.airline) // Need to change ariports based on selection
   });
