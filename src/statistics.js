@@ -20,6 +20,67 @@ var svg = d3.select("body").append("svg")
     .attr("transform", 
           "translate(" + margin.left + "," + margin.top + ")");
 
+/*
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+"November", "December"]
+var month_select = "January";
+
+var monthSlider = d3
+  .sliderBottom()
+  .min("January")
+  .max("December")
+  .width(400)
+  .tickFormat(d3.format(''))
+  .ticks(12)
+  .step(1)
+  .default(12)
+  .on('onchange', val => {
+      month_select = val;
+      console.log(month_select);
+      window.updateCSV(month_select)
+  });
+
+var monthStep = d3
+  .select('div#slider-step')
+  .append('svg')
+  .attr('width', 500)
+  .attr('height', 100)
+  .append('g')
+  .attr('transform', 'translate(30,30)')
+  .attr('fill', 'red')
+  .attr('font-size', '40px');
+
+monthStep.call(monthSlider);
+
+function updateCSV(month) {
+  if (month == "January") {
+    return '../static/jan.csv'
+  } else if (month == "February") {
+    return '../static/feb.csv'
+  } else if (month == "March") {
+    return '../static/march.csv'
+  } else if (month == "April") {
+    return '../static/april.csv'
+  } else if (month == "May") {
+    return '../static/may.csv'
+  } else if (month == "June") {
+    return '../static/june.csv'
+  } else if (month == "July") {
+    return '../static/july.csv'
+  } else if (month == "August") {
+    return '../static/august.csv'
+  } else if (month == "September") {
+    return '../static/sept.csv'
+  } else if (month == "October") {
+    return '../static/oct.csv'
+  } else if (month == "November") {
+    return '../static/nov.csv'
+  } else {
+    return '../static/dec.csv'
+  }
+}
+*/
+         
 // Default will be set to january flights, need to change file
 // based on selected month
 const csvData = require('../static/jan.csv');
