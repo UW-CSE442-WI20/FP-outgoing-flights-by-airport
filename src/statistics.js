@@ -1,5 +1,4 @@
 var d3 = require('d3');
-//const datePattern = /\.*-(\d{01})-\.*/;
 
 // Graph visualization copied from example found at:
 // https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
@@ -20,25 +19,25 @@ var svg = d3.select("body").append("svg")
     .attr("transform", 
           "translate(" + margin.left + "," + margin.top + ")");
 
-/*
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
-"November", "December"]
+"November", "December"];
 var month_select = "January";
+var file = "../static/months/jan.csv";
 
-var monthSlider = d3
-  .sliderBottom()
-  .min("January")
-  .max("December")
-  .width(400)
-  .tickFormat(d3.format(''))
-  .ticks(12)
-  .step(1)
-  .default(12)
-  .on('onchange', val => {
-      month_select = val;
-      console.log(month_select);
-      window.updateCSV(month_select)
-  });
+// var monthSlider = d3
+//   .sliderBottom()
+//   .min(months[0])
+//   .max(months[11])
+//   .width(400)
+//   .tickFormat(d3.format(''))
+//   .ticks(12)
+//   .step(1)
+//   .default("January")
+//   .on('onchange', val => {
+//       month_select = val;
+//       console.log(month_select);
+//       window.updateCSV(month_select)
+//   });
 
 var monthStep = d3
   .select('div#slider-step')
@@ -50,40 +49,40 @@ var monthStep = d3
   .attr('fill', 'red')
   .attr('font-size', '40px');
 
-monthStep.call(monthSlider);
+// monthStep.call(monthSlider);
+
+const csvData = require("../static/months/jan.csv");
 
 function updateCSV(month) {
   if (month == "January") {
-    return '../static/jan.csv'
+    csvData = require("../static/months/jan.csv");
   } else if (month == "February") {
-    return '../static/feb.csv'
+    csvData = require('../static/months/feb.csv');
   } else if (month == "March") {
-    return '../static/march.csv'
+    csvData = require('../static/months/march.csv');
   } else if (month == "April") {
-    return '../static/april.csv'
+    csvData = require('../static/months/april.csv');
   } else if (month == "May") {
-    return '../static/may.csv'
+    csvData = require('../static/months/may.csv');
   } else if (month == "June") {
-    return '../static/june.csv'
+    csvData = require('../static/months/june.csv');
   } else if (month == "July") {
-    return '../static/july.csv'
+    csvData = require('../static/months/july.csv');
   } else if (month == "August") {
-    return '../static/august.csv'
+    csvData = require('../static/months/august.csv');
   } else if (month == "September") {
-    return '../static/sept.csv'
+    csvData = require('../static/months/sept.csv');
   } else if (month == "October") {
-    return '../static/oct.csv'
+    csvData = require('../static/months/oct.csv');
   } else if (month == "November") {
-    return '../static/nov.csv'
+    csvData = require('../static/months/nov.csv');
   } else {
-    return '../static/dec.csv'
+    csvData = require('../static/months/dec.csv');
   }
 }
-*/
          
 // Default will be set to january flights, need to change file
 // based on selected month
-const csvData = require('../static/jan.csv');
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
