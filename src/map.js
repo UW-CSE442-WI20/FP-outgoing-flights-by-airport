@@ -255,21 +255,19 @@ function toProperCase(value) {
 const airportID = parsed.airline;
 
 setTimeout(function() {
-    document.getElementById("airportName").innerHTML = airportID;
-    tallyData();
-}, 500);
-
-function findAirportByID(id) {
-    let airport = "";
     d3.csv(getFile).then(function(data) {
         data.forEach(function(d) {
-            if(d.AirID === id) {
-                return d.AirPort;
+            d.Airline = d.Airline
+            d.AirID = d.AirID
+    
+            if (d.AirID == airportID) {
+                document.getElementById("airportName").innerHTML = d.AirPort;
+                console.log(d.AirPort);
             }
         });
     });
-    return airport;
-}
+    tallyData();
+}, 500);
 
 function tallyData() {
     d3.csv(csvData).then(function(data) {

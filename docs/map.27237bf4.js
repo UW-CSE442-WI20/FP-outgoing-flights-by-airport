@@ -29363,8 +29363,10 @@ exports.stringifyUrl = function (input, options) {
 };
 },{"strict-uri-encode":"../node_modules/strict-uri-encode/index.js","decode-uri-component":"../node_modules/decode-uri-component/index.js","split-on-first":"../node_modules/split-on-first/index.js"}],"../static/airport_names.csv":[function(require,module,exports) {
 module.exports = "/airport_names.22511235.csv";
-},{}],"../static/grouped_data.csv":[function(require,module,exports) {
-module.exports = "/grouped_data.bfb1d01c.csv";
+},{}],"../static/2018_grouped_no_dates_with_cords.csv":[function(require,module,exports) {
+module.exports = "/2018_grouped_no_dates_with_cords.96f062a8.csv";
+},{}],"../static/new_temp.csv":[function(require,module,exports) {
+module.exports = "/new_temp.3dc906ff.csv";
 },{}],"map.js":[function(require,module,exports) {
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -29410,9 +29412,30 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 }).addTo(map);
 
-var d3 = require('d3');
+function onMapClick(l) {
+  d3.csv(airPorts).then(function (data) {
+    data.forEach(function (d) {
+      d.X = +d.X;
+      d.Y = +d.Y;
 
-var csvData = require('../static/grouped_data.csv');
+      if (l.latlng.lat == d.X && l.latlng.lng == d.Y) {
+        var address = 'main.html?airline=';
+        address = address.concat(d.AirID);
+        window.location.href = address;
+      }
+    });
+  });
+}
+
+function onHover(l) {
+  info.update(l.latlng);
+}
+
+function offHover(l) {
+  info.update();
+}
+
+var csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
 
 d3.csv(csvData).then(function (data) {
   data.forEach(function (d) {
@@ -29451,12 +29474,24 @@ d3.csv(csvData).then(function (data) {
 function draw_data(data) {
   console.log(data);
   data.forEach(function (d) {
-    destinations.push(d.Dest); //ABQ 35.0433,-106.6129
-    //ABY 31.5357,-84.1939
-    //BQK 31.2548,-81.4669
-    //SFB 28.7794,-81.2357
-
-    L.circle([d.O_lat, d.O_long], 10).addTo(map);
+    destinations.push(d.Dest);
+    L.circle([d.O_lat, d.O_long], {
+      color: "red",
+      fillColor: "#f03",
+      fillOpacity: 0.5,
+      radius: 50000,
+      Opacity: 0.2
+    }).addTo(map);
+    L.circle([d.D_lat, d.D_long], {
+      color: "blue",
+      fillColor: "#f03",
+      fillOpacity: 0.1,
+      radius: 10000,
+      weight: 1
+    }).on({
+      mouseover: onHover,
+      mouseout: offHover
+    });
     var pointA = new L.LatLng(d.O_lat, d.O_long);
     var pointB = new L.LatLng(d.D_lat, d.D_long);
     var pointList = [pointA, pointB];
@@ -29470,7 +29505,72 @@ function draw_data(data) {
   });
   destinations = distinct_Types(destinations);
 }
+/*
+ Function to draw the airports that are gotten from the airports csv file
+ */
 
+
+function draw_airports(data) {
+  console.log(data);
+  data.forEach(function (d) {
+    L.circle([d.X, d.Y], {
+      color: "blue",
+      fillColor: "#f03",
+      fillOpacity: 0,
+      opacity: 0,
+      radius: 50000,
+      weight: 1
+    }).on({
+      click: onMapClick,
+      dblclick: onMapClick,
+      mouseover: onHover,
+      mouseout: offHover
+    }).addTo(map);
+    L.circle([d.X, d.Y], {
+      color: "blue",
+      fillColor: "#f03",
+      fillOpacity: 0.1,
+      radius: 1000,
+      weight: 1
+    }).on('dblclick', onMapClick).addTo(map);
+  });
+}
+/* 
+ Load in all the airports as circles so we can click
+on them and be able to change the display interactively
+ */
+
+
+var airPorts = require('../static/new_temp.csv');
+
+d3.csv(airPorts).then(function (data) {
+  data.forEach(function (d) {
+    d.Airline = d.Airline;
+    d.AirID = d.AirID;
+    d.X = +d.X;
+    d.Y = +d.Y;
+  });
+  draw_airports(data);
+});
+/* 
+ Working on a place to display the hover information
+ */
+
+var info = L.control();
+
+info.onAdd = function (map) {
+  this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+
+  this.update();
+  return this._div;
+}; // method that we will use to update the control based on feature properties passed
+
+
+info.update = function (props) {
+  this._div.innerHTML = '<h4>Flight Info</h4>' + (props ? '<b>' + "adsada" + '</b><br />' + "damsd" + ' people / mi<sup>2</sup>' : 'Hover over a destination');
+};
+
+info.addTo(map);
 d3.csv(getFile, function (d) {
   return {
     type: d.AirPort,
@@ -29503,16 +29603,68 @@ function toProperCase(value) {
   }
 
   return result;
-} // Sets values to be displayed on HTML
+} // --------------------------
+// DISPLAY SUMMARY INFO BELOW
+// --------------------------
 
 
+var airportID = parsed.airline;
 setTimeout(function () {
-  var airportName = parsed.airline;
-  document.getElementById("airportName").innerHTML = airportName;
-  var numFlights = 0;
-  document.getElementById("numFlights").innerText = numFlights;
+  document.getElementById("airportName").innerHTML = airportID;
+  tallyData();
 }, 500);
-},{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/airport_names.csv":"../static/airport_names.csv","../static/grouped_data.csv":"../static/grouped_data.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+function findAirportByID(id) {
+  var airport = "";
+  d3.csv(getFile).then(function (data) {
+    data.forEach(function (d) {
+      if (d.AirID === id) {
+        return d.AirPort;
+      }
+    });
+  });
+  return airport;
+}
+
+function tallyData() {
+  d3.csv(csvData).then(function (data) {
+    var map = new Map();
+    var totalCount = 0;
+    var totalFlightTime = 0.0;
+    data.forEach(function (d) {
+      if (d.Origin === airportID) {
+        // count++;
+        // Is 'count' in the CSV the num of flights?
+        var count = parseInt(d.Count);
+        totalCount += count;
+        totalFlightTime += parseFloat(d.Time) * count; // tallying counts for each airport
+
+        if (map.has(d.Dest)) {
+          var prev = map.get(d.Dest);
+          map.set(d.Dest, prev + count);
+        } else {
+          map.set(d.Dest, count);
+        }
+      }
+    });
+    var airportMaxID = "";
+    var airportMaxCount = 0;
+    map.forEach(function (value, key, map) {
+      if (value > airportMaxCount) {
+        airportMaxID = key;
+        airportMaxCount = value;
+      }
+    });
+    console.log(totalFlightTime);
+    console.log(totalCount);
+    document.getElementById("airportCount").innerText = map.size;
+    document.getElementById("airportMost").innerText = airportMaxID;
+    document.getElementById("airportMostNum").innerText = airportMaxCount;
+    document.getElementById("numFlights").innerText = totalCount;
+    document.getElementById("avgFlightTime").innerText = (totalFlightTime / totalCount).toFixed(2);
+  });
+} // --------------------------
+},{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/airport_names.csv":"../static/airport_names.csv","../static/2018_grouped_no_dates_with_cords.csv":"../static/2018_grouped_no_dates_with_cords.csv","../static/new_temp.csv":"../static/new_temp.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29540,7 +29692,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61944" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52350" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
