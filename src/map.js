@@ -9,8 +9,8 @@ Names:  Anika Padwekar
 Sources:    https://github.com/UW-CSE442-WI20/A3-accidents-in-the-us (1)
             http://bl.ocks.org/almccon/1bcde7452450c153d8a0684085f249fd (2)
 */
-var d3 = require('d3');
-var queryString = require('query-string');
+const d3 = require('d3');
+const queryString = require('query-string');
 
 const parsed = queryString.parse(location.search);
 const getFile = require('../static/airport_names.csv');
@@ -19,6 +19,7 @@ const getFile = require('../static/airport_names.csv');
 
 /* Destination airports */
 var destinations = Array();
+/*                      */
 var data1 = Array();
 /* Sorted destination airports */
 var types = [];
@@ -32,31 +33,27 @@ var map = L
 
 L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    minZoom: 2  // Prevent ths duplicated display of countries on zoom
+        maxZoom: 19,
+        minZoom: 2  // Prevent ths duplicated display of countries on zoom
     }).addTo(map);
 
-function onMapClick(l) {
-     d3.csv(airPorts).then(function(data) {
-     data.forEach(function(d) {
-             d.X = +d.X
-             d.Y = +d.Y
-             if (l.latlng.lat == d.X && l.latlng.lng == d.Y) {
-                 var address = 'main.html?airline=';
-                 address = address.concat(d.AirID);
-                 window.location.href = address;
-             }
-         }
-     )});
- }
+/*
+Load in all the airports as circles so we can click
+on them and be able to change the display interactively
+*/
+const airPorts = require('../static/new_temp.csv');
 
- function onHover(l) {
-     info.update(l.latlng);
- }
+d3.csv(airPorts).then(function(data) {
+    data.forEach(function(d) {
+            d.Airline = d.Airline;
+            d.AirID = d.AirID
+            d.X = +d.X
+            d.Y = +d.Y
+        }
+    );
+    draw_airports(data);
+});
 
- function offHover(l) {
-     info.update();
- }
 
 const csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
 
@@ -67,11 +64,11 @@ d3.csv(csvData).then(function(data) {
             d.Time = +d.Time
             d.Distance = +d.Distance
             d.Count = +d.Count
-        
+
             d.O_lat = +d.O_lat
             d.O_long = +d.O_long
             d.D_lat = +d.D_lat
-            d.D_long = +d.D_long            
+            d.D_long = +d.D_long
         }
     );
     draw_data(data.filter(function (row) {
@@ -97,8 +94,8 @@ d3.csv(csvData).then(function(data) {
       });
 
     select.selectAll("option")
-      .data(types)
-      .enter()
+        .data(types)
+        .enter()
         .append("option")
         .attr("class", "dropdown1")
         .attr("value", function (d) { return d; })
@@ -137,112 +134,110 @@ function toProperCase(value) {
 }
 function draw_data(data){
 
-    data1 = data;
-
-    console.log(data);
-
     data.forEach(function(d) {
         destinations.push(d.Dest);
-        
+        data1.push(d);
+
         L.circle([d.O_lat,d.O_long], {
-           color: "red",
-           fillColor: "#f03",
-           fillOpacity: 0.5,
-           radius: 50000,
-           Opacity: 0.2
-         }).addTo(map);
+            color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 25000,
+            Opacity: 0.2
+        }).addTo(map);
 
-         L.circle([d.D_lat,d.D_long], {
-           color: "blue",
-           fillColor: "#f03",
-           fillOpacity: 0.1,
-           radius: 10000,
-           weight: 1
-         }).on({
-             mouseover: onHover,
-             mouseout: offHover
-         })
-        
-        var pointA = new L.LatLng(d.O_lat, d.O_long);
-        var pointB = new L.LatLng(d.D_lat, d.D_long);
-        var pointList = [pointA, pointB];
+        L.circle([d.D_lat,d.D_long], {
+            color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 30000,
+            Opacity: 0.2
+        }).on({
+            mouseover: onHover,
+            mouseout: offHover,
+            click: onMapClick,
+            dblclick: onMapClick
+        }).addTo(map).bringToFront();
 
-        var latlngs = Array()
-        latlngs.push(pointA)
-        latlngs.push(pointB)
+        let pointA = new L.LatLng(d.O_lat, d.O_long);
+        let pointB = new L.LatLng(d.D_lat, d.D_long);
 
-        var polyline = L.polyline(latlngs, {color: 'blue', weight: 1}).addTo(map);
+        let latlngs = Array();
+        latlngs.push(pointA);
+        latlngs.push(pointB);
+
+        L.polyline(latlngs, {color: 'blue', weight: 1}).addTo(map);
     });
     destinations = distinct_Types(destinations);
 }
 
+
 /*
- Function to draw the airports that are gotten from the airports csv file
- */
- function draw_airports(data){
+Function to draw the airports that are gotten from the airports csv file
+*/
+function draw_airports(data){
 
-     console.log(data)
+    data.forEach(function(d) {
+        L.circle([d.X,d.Y], {
+            fillOpacity: 0,
+            opacity: 1,
+            radius: 25000
+        }).on({
+            click: onMapClick,
+            dblclick: onMapClick
+        }).addTo(map);
 
-     data.forEach(function(d) {
-         L.circle([d.X,d.Y], {
-           color: "blue",
-           fillColor: "#f03",
-           fillOpacity: 0,
-           opacity: 0,
-           radius: 50000,
-           weight: 1
-         }).on({
-             click: onMapClick,
-             dblclick: onMapClick,
-             mouseover: onHover,
-             mouseout: offHover
-         }).addTo(map);
+        L.circle([d.X,d.Y], {
+            color: "blue",
+            fillColor: "#f03",
+            fillOpacity: 0.1,
+            radius: 1000,
+            weight: 1
+        }).on('dblclick', onMapClick).addTo(map);
+    });
+}
 
-         L.circle([d.X,d.Y], {
-           color: "blue",
-           fillColor: "#f03",
-           fillOpacity: 0.1,
-           radius: 1000,
-           weight: 1
-         }).on('dblclick', onMapClick).addTo(map); 
-     });
- }
+// --------------------------
+// Map Interactions Below
+// --------------------------
+function onMapClick(l) {
+    d3.csv(airPorts).then(function(data) {
+        data.forEach(function(d) {
+                d.X = +d.X
+                d.Y = +d.Y
+                if (l.latlng.lat == d.X && l.latlng.lng == d.Y) {
+                    let address = 'main.html?airline=';
+                    address = address.concat(d.AirID);
+                    window.location.href = address;
+                }
+            }
+        )});
+}
 
- /* 
+function onHover(l) {
+    info.update(l.latlng);
+}
 
- Load in all the airports as circles so we can click
- on them and be able to change the display interactively
+function offHover(l) {
+    info.update();
+}
+// --------------------------
 
- */
- const airPorts = require('../static/new_temp.csv');
 
- d3.csv(airPorts).then(function(data) {
-     data.forEach(function(d) {
-             d.Airline = d.Airline;
-             d.AirID = d.AirID
-             d.X = +d.X
-             d.Y = +d.Y
-         }
-     );
-     draw_airports(data); 
- });
+// --------------------------
+// Hover Piece Below
+// --------------------------
+var info = L.control();
 
- /* 
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
 
- Working on a place to display the hover information
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
 
- */
- var info = L.control();
-
- info.onAdd = function (map) {
-     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-     this.update();
-     return this._div;
- };
-
- // method that we will use to update the control based on feature properties passed
- info.update = function (props) {
-    
     if (props == null){
         this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination'
         return
@@ -259,13 +254,46 @@ function draw_data(data){
     // console.log(temp.Count);
     // console.log(temp.Origin);
 
-    this._div.innerHTML = '<h4>Flight Info</h4>' +  (temp ?
-         '<b>' + temp.Origin + '</b><br />' + temp.Count + ' people / mi<sup>2</sup>'
-         : 'Hover over a destination');
+    this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
+        '<b>' + props.lat + '</b><br />' + props.lng + ' people / mi<sup>2</sup>'
+        : 'Hover over a destination');
 };
 
- info.addTo(map);
+info.addTo(map);
 
+// --------------------------
+
+
+d3.csv(getFile, function(d){
+    return {
+        type : d.AirPort,
+        code : d.AirID
+    };
+}).then(function(data) {
+    for(var i = 0; i < data.length; i++){
+        var id = data[i].code;
+        ID_Name.set(id, data[i].type);
+    }
+});
+
+function distinct_Types(rows) {
+    for(var i = 0; i < rows.length; i++) {
+        types[i] = ID_Name.get(rows[i]);
+    }
+    types = [...new Set(types)].sort();
+    types.unshift("Please Select an AirPort");
+    console.log(types)
+    return types;
+}
+
+function toProperCase(value) {
+    var words = value.split(" ");
+    var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
+    for (var i = 1; i < words.length; i++) {
+        result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
+    }
+    return result;
+}
 
 // --------------------------
 // DISPLAY SUMMARY INFO BELOW
@@ -277,7 +305,7 @@ setTimeout(function() {
         data.forEach(function(d) {
             d.Airline = d.Airline
             d.AirID = d.AirID
-    
+
             if (d.AirID == airportID) {
                 document.getElementById("airportName").innerHTML = d.AirPort;
                // console.log(d.AirPort);
