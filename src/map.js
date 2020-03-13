@@ -15,7 +15,7 @@ const queryString = require('query-string');
 const parsed = queryString.parse(location.search);
 const getFile = require('../static/airport_names.csv');
 
-console.log(parsed.airline);
+//console.log(parsed.airline);
 
 /* Destination airports */
 var destinations = Array();
@@ -75,9 +75,9 @@ d3.csv(csvData).then(function(data) {
         return row.Origin == parsed.airline
     }));
 
-    var select = d3.select(".dropdown2")
-        .append("div")
-        .append("select")
+    var select = d3.select(".dropdown1")
+      .append("div")
+      .append("select")
 
     select
         .on("change", function(d) {
@@ -102,14 +102,41 @@ d3.csv(csvData).then(function(data) {
         .data(types)
         .enter()
         .append("option")
-        .attr("class", "dropdown2")
+        .attr("class", "dropdown1")
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
 });
 
-// --------------------------
-// Map Drawing Functions Below
-// --------------------------
+d3.csv(getFile, function(d){
+    return {
+    type : d.AirPort,
+    code : d.AirID
+  };
+  }).then(function(data) {
+    for(var i = 0; i < data.length; i++){
+      var id = data[i].code;
+      ID_Name.set(id, data[i].type);
+    }
+  });
+
+function distinct_Types(rows) {
+  for(var i = 0; i < rows.length; i++) {
+    types[i] = ID_Name.get(rows[i]);
+  }
+  types = [...new Set(types)].sort();
+  types.unshift("Please Select an AirPort");
+  //console.log(types)
+  return types;
+}
+
+function toProperCase(value) {
+  var words = value.split(" ");
+  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
+  for (var i = 1; i < words.length; i++) {
+    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
+  }
+  return result;
+}
 function draw_data(data){
 
     data.forEach(function(d) {
@@ -295,7 +322,7 @@ setTimeout(function() {
 
             if (d.AirID == airportID) {
                 document.getElementById("airportName").innerHTML = d.AirPort;
-                console.log(d.AirPort);
+               // console.log(d.AirPort);
             }
         });
     });
@@ -330,7 +357,7 @@ function tallyData() {
         let airportMaxCount = 0;
         map.forEach(function(value, key, map) {
             if(value > airportMaxCount) {
-                airportMaxID = key;
+                airportMaxID = ID_Name.get(key);
                 airportMaxCount = value;
             }
         });
@@ -343,5 +370,3 @@ function tallyData() {
         document.getElementById("avgFlightTime").innerText = (totalFlightTime / totalCount).toFixed(2);
     });
 }
-
-// --------------------------

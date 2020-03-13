@@ -42,7 +42,7 @@ d3.csv(getFile, function(d){
               return d.AirID;
         }}).then(v => {
             address = address.concat(v);
-            console.log(address);
+            //console.log(address);
             window.location.href = address;
         })
         //

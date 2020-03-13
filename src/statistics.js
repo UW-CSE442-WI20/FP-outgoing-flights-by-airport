@@ -1,5 +1,5 @@
 var d3 = require('d3');
-const queryString = require('query-string');
+var queryString = require('query-string');
 const parsed = queryString.parse(location.search);
 //const datePattern = /\.*-(\d{01})-\.*/;
 
@@ -85,7 +85,7 @@ function updateCSV(month) {
 
 // Default will be set to january flights, need to change file
 // based on selected month
-const csvData = require('../static/Months/jan.csv');
+const csvData = require('../static/2018_grouped_alldates.csv');
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
@@ -96,11 +96,10 @@ d3.csv(csvData).then(function(data) {
         d.Count = +d.Count
     });
 
-    console.log(parsed.origin);
-    console.log(parsed.dest);
-    const results = data.filter(function (row) {
-        return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
-    });
+   
+  const results = data.filter(function (row) {
+    return (row.Origin == parsed.airline) // Need to change ariports based on selection
+  });
 
     console.log(results);
     x.domain(results.map(function(d) { return d.Date; }));
@@ -139,9 +138,9 @@ var div = d3.select("body").append("div")
 
 // mouse handle the 
 function handleMouseOver(d, i) {
-    toolTipMap(`Name of Airport level ${d.Count} in date: ${d.Date}`);
-    // Use D3 to select element, change color and size
-    d3.select(this).style("opacity", .7);
+  toolTipMap(`There are ${d.Count} flights in date: ${d.Date}`);
+  // Use D3 to select element, change color and size
+  d3.select(this).style("opacity", .7);
 
 }
 
