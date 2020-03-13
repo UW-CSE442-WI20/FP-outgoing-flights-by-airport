@@ -19,6 +19,7 @@ console.log(parsed.airline);
 
 /* Destination airports */
 var destinations = Array();
+var data1 = Array();
 /* Sorted destination airports */
 var types = [];
 var ID_Name = new Map();
@@ -105,6 +106,8 @@ d3.csv(csvData).then(function(data) {
 });
 
 function draw_data(data){
+
+    data1 = data;
 
     console.log(data);
 
@@ -209,10 +212,27 @@ function draw_data(data){
 
  // method that we will use to update the control based on feature properties passed
  info.update = function (props) {
-     this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
-         '<b>' + "adsada" + '</b><br />' + "damsd" + ' people / mi<sup>2</sup>'
+    
+    if (props == null){
+        this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination'
+        return
+    }
+    console.log(props)
+    console.log(props.lat)
+    console.log(props.lng)
+    //props.lat
+    //props.lng
+    temp = data1.filter(function (row) {
+        return row.D_lat == props.lat && row.D_long == props.lng
+    })
+    console.log(temp);
+    console.log(temp.Count);
+    console.log(temp.Origin);
+
+    this._div.innerHTML = '<h4>Flight Info</h4>' +  (temp ?
+         '<b>' + temp.Origin + '</b><br />' + temp.Count + ' people / mi<sup>2</sup>'
          : 'Hover over a destination');
- };
+};
 
  info.addTo(map);
 
