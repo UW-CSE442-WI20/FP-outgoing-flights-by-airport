@@ -90,7 +90,9 @@ d3.csv(csvData).then(function(data) {
                     return d.AirID;
                 }}).then(v => {
                 address = address.concat(v);
-                window.location.href = address;
+                if (Array.isArray(v) && v.length) {
+                    window.location.href = address;
+                }                //
             })
             //window.location.href = address;
         });
@@ -198,6 +200,20 @@ function offHover(l) {
     info.update();
 }
 // --------------------------
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend');
+    // loop through our density intervals and generate a label with a colored square for each interval
+    div.innerHTML +=
+            '<p>Click or double click <br> on an airport to change the <br> departure city to that one</p>';
+
+    return div;
+};
+
+legend.addTo(map);
 
 
 // --------------------------
