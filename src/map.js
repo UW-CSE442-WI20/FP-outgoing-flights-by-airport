@@ -35,53 +35,9 @@ L.tileLayer(
 
 var d3 = require('d3');
 
-function draw_airports(data){
-
-    console.log(data)
-
-    data.forEach(function(d) {
-        L.circle([d.X,d.Y], {
-          color: "blue",
-          fillColor: "#f03",
-          fillOpacity: 0.1,
-          radius: 1000,
-          weight: 1
-        }).on('click', onMapClick)
-        .addTo(map);
-    });
-}
-
-function onMapClick(l) {
-    d3.csv(airPorts).then(function(data) {
-    data.forEach(function(d) {
-            d.X = +d.X
-            d.Y = +d.Y
-            if (l.latlng.lat == d.X && l.latlng.lng == d.Y) {
-                var address = 'main.html?airline=';
-                address = address.concat(d.AirID);
-                window.location.href = address;
-
-            }
-        }
-    )});
-}
-
-const airPorts = require('../static/new_temp.csv');
-console.log("hey")
-d3.csv(airPorts).then(function(data) {
-    data.forEach(function(d) {
-            d.Airline = d.Airline;
-            d.AirID = d.AirID
-            d.X = +d.X
-            d.Y = +d.Y
-        }
-    );
-    draw_airports(data); 
-});
-
 
 const csvData = require('../static/grouped_data.csv');
-console.log("hi")
+
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
             d.Origin = d.Origin;
@@ -100,7 +56,7 @@ d3.csv(csvData).then(function(data) {
         return row.Origin == parsed.airline
     }));
 
-    var select = d3.select(".dropdown1")
+    var select = d3.select(".dropdown2")
       .append("div")
       .append("select")
 
@@ -122,12 +78,10 @@ d3.csv(csvData).then(function(data) {
       .data(types)
       .enter()
         .append("option")
-        .attr("class", "dropdown1")
+        .attr("class", "dropdown2")
         .attr("value", function (d) { return d; })
         .text(function (d) { return toProperCase(d); });
 });
-
-
 
 function draw_data(data){
 
@@ -135,21 +89,18 @@ function draw_data(data){
 
     data.forEach(function(d) {
         destinations.push(d.Dest);
-
-        L.circle([d.O_lat,d.O_long], {
-          color: "red",
-          fillColor: "#f03",
-          fillOpacity: 0.5,
-          radius: 10000,
-          Opacity: 0.2
-        }).addTo(map);
+        //ABQ 35.0433,-106.6129
+        //ABY 31.5357,-84.1939
+        //BQK 31.2548,-81.4669
+        //SFB 28.7794,-81.2357
+        L.circle([d.O_lat,d.O_long], 10)
+        .addTo(map);
         
         var pointA = new L.LatLng(d.O_lat, d.O_long);
         var pointB = new L.LatLng(d.D_lat, d.D_long);
         var pointList = [pointA, pointB];
 
         var latlngs = Array()
-
         latlngs.push(pointA)
         latlngs.push(pointB)
 
@@ -158,9 +109,6 @@ function draw_data(data){
     destinations = distinct_Types(destinations);
     
 }
-
-
-
 d3.csv(getFile, function(d){
       return {
       type : d.AirPort,
@@ -172,7 +120,6 @@ d3.csv(getFile, function(d){
         ID_Name.set(id, data[i].type);
       }
     });
-
 
 function distinct_Types(rows) {
     for(var i = 0; i < rows.length; i++) {
@@ -191,4 +138,70 @@ function toProperCase(value) {
       result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase(); 
     }
     return result;
-  }
+}
+
+// --------------------------
+// DISPLAY SUMMARY INFO BELOW
+// --------------------------
+const airportID = parsed.airline;
+
+setTimeout(function() {
+    document.getElementById("airportName").innerHTML = airportID;
+    tallyData();
+}, 500);
+
+function findAirportByID(id) {
+    let airport = "";
+    d3.csv(getFile).then(function(data) {
+        data.forEach(function(d) {
+            if(d.AirID === id) {
+                return d.AirPort;
+            }
+        });
+    });
+    return airport;
+}
+
+function tallyData() {
+    d3.csv(csvData).then(function(data) {
+        const map = new Map();
+        let totalCount = 0;
+        let totalFlightTime = 0.0;
+        data.forEach(function(d) {
+            if(d.Origin === airportID) {
+                // count++;
+                // Is 'count' in the CSV the num of flights?
+                let count = parseInt(d.Count);
+                totalCount += count;
+
+                totalFlightTime += parseFloat(d.Time) * count;
+
+                // tallying counts for each airport
+                if (map.has(d.Dest)) {
+                    let prev = map.get(d.Dest);
+                    map.set(d.Dest, prev + count);
+                } else {
+                    map.set(d.Dest, count);
+                }
+            }
+        });
+
+        let airportMaxID = "";
+        let airportMaxCount = 0;
+        map.forEach(function(value, key, map) {
+            if(value > airportMaxCount) {
+                airportMaxID = key;
+                airportMaxCount = value;
+            }
+        });
+        console.log(totalFlightTime);
+        console.log(totalCount);
+        document.getElementById("airportCount").innerText = map.size;
+        document.getElementById("airportMost").innerText = airportMaxID;
+        document.getElementById("airportMostNum").innerText = airportMaxCount;
+        document.getElementById("numFlights").innerText = totalCount;
+        document.getElementById("avgFlightTime").innerText = (totalFlightTime / totalCount).toFixed(2);
+    });
+}
+
+// --------------------------
