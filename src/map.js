@@ -315,6 +315,7 @@ function toProperCase(value) {
 const airportID = parsed.airline;
 
 setTimeout(function() {
+    document.getElementById("airportName").innerHTML = "<Selected airport>";
     d3.csv(getFile).then(function(data) {
         data.forEach(function(d) {
             d.Airline = d.Airline
