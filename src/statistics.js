@@ -84,7 +84,6 @@ function updateCSV(month) {
   }
 }
 
-
 // Default will be set to january flights, need to change file
 // based on selected month
 const csvData = require('../static/2018_grouped_alldates.csv');
