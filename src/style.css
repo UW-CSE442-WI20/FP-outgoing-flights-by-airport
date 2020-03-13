@@ -186,7 +186,10 @@ a:hover {
     fill: #002fff;
     fill-opacity: 0.5;
 }
-.bar { fill: white; }
+.bar { 
+    grid-column: 2;
+    fill: white;
+}
 
 div.tooltip {	
     position: absolute;			
