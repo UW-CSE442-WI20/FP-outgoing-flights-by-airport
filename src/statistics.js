@@ -54,7 +54,7 @@ var monthStep = d3
 
 // monthStep.call(monthSlider);
 
-const csvData = require("../static/months/jan.csv");
+const csv = require("../static/months/jan.csv");
 
 function updateCSV(month) {
   if (month == "January") {
@@ -99,9 +99,9 @@ d3.csv(csvData).then(function(data) {
 
    
   const results = data.filter(function (row) {
-    return (row.Origin == parsed.airline) // Need to change ariports based on selection
-  });
-
+        return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
+   });
+  
     console.log(results);
     x.domain(results.map(function(d) { return d.Date; }));
     y.domain([0, d3.max(results, function(d) { return d.Count; })]);
