@@ -1,4 +1,6 @@
 var d3 = require('d3');
+const queryString = require('query-string');
+const parsed = queryString.parse(location.search);
 //const datePattern = /\.*-(\d{01})-\.*/;
 
 // Graph visualization copied from example found at:
@@ -8,17 +10,17 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
     height = 500 - margin.top - margin.bottom;
 
 var x = d3.scaleBand()
-          .range([0, width])
-          .padding(0.1);
+    .range([0, width])
+    .padding(0.1);
 var y = d3.scaleLinear()
-          .range([height, 0]);
+    .range([height, 0]);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", 
-          "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
 
 /*
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -80,10 +82,10 @@ function updateCSV(month) {
   }
 }
 */
-         
+
 // Default will be set to january flights, need to change file
 // based on selected month
-const csvData = require('../static/jan.csv');
+const csvData = require('../static/Months/jan.csv');
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
@@ -91,71 +93,73 @@ d3.csv(csvData).then(function(data) {
         d.Date = d.Date
         console.log(d.Date)
         d.Distance = +d.Distance
-        d.Count = +d.Count    
+        d.Count = +d.Count
     });
-    
-  const results = data.filter(function (row) {
-    return (row.Origin == 'SEA' && row.Dest == 'ORD') // Need to change ariports based on selection
-  });
 
-  console.log(results);
-  x.domain(results.map(function(d) { return d.Date; }));
-  y.domain([0, d3.max(results, function(d) { return d.Count; })]);
-  
+    console.log(parsed.origin);
+    console.log(parsed.dest);
+    const results = data.filter(function (row) {
+        return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
+    });
 
-  // add bars
-  svg.selectAll(".bar")
-      .data(results)
-      .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.Date); })
-      .attr("width", x.bandwidth())
-      .attr("y", function(d) { return y(d.Count); })
-      .attr("height", function(d) { return height - y(d.Count); })
-      .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut)
+    console.log(results);
+    x.domain(results.map(function(d) { return d.Date; }));
+    y.domain([0, d3.max(results, function(d) { return d.Count; })]);
 
-  //x axis
-  svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(10))
-      .selectAll("text")	
+
+    // add bars
+    svg.selectAll(".bar")
+        .data(results)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.Date); })
+        .attr("width", x.bandwidth())
+        .attr("y", function(d) { return y(d.Count); })
+        .attr("height", function(d) { return height - y(d.Count); })
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut)
+
+    //x axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).ticks(10))
+        .selectAll("text")
         .style("text-anchor", "end")
         .attr("transform", "rotate(-65)");
 
-  // y axis
-  svg.append("g")
-      .call(d3.axisLeft(y));
+    // y axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
 
 });
 // define feagure div for tip
-var div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
     .style("opacity", 0);
 
 // mouse handle the 
 function handleMouseOver(d, i) {
-  toolTipMap(`Name of Airport level ${d.Count} in date: ${d.Date}`);
-  // Use D3 to select element, change color and size
-  d3.select(this).style("opacity", .7);
+    toolTipMap(`Name of Airport level ${d.Count} in date: ${d.Date}`);
+    // Use D3 to select element, change color and size
+    d3.select(this).style("opacity", .7);
 
 }
 
-function handleMouseOut(d, i) { 
-  // Use D3 to select element, change color and size
-  //console.log("mouse", this);
-  div.transition()		
-                .duration(500)		
-                .style("opacity", 0);	
-  d3.select(this).style("opacity", 1);
+function handleMouseOut(d, i) {
+    // Use D3 to select element, change color and size
+    //console.log("mouse", this);
+    div.transition()
+        .duration(500)
+        .style("opacity", 0);
+    d3.select(this).style("opacity", 1);
 }
 
 // mouse click
 function toolTipMap(d){
-  div.transition()    
-        .duration(150)    
+    div.transition()
+        .duration(150)
         .style("opacity", .9);
-      div.html(d) 
-        .style("left", (d3.event.pageX) + "px")   
+    div.html(d)
+        .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
 }
