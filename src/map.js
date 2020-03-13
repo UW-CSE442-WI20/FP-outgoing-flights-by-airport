@@ -80,18 +80,23 @@ d3.csv(csvData).then(function(data) {
       .append("select")
 
     select
-      .on("change", function(d) {
-        var address = 'statistics.html?airline=';
-        var AirPort = d3.select(this).property("value");
-        d3.csv(getFile, function(d){
-          if (d.AirPort == AirPort) {
-              return d.AirID;
-        }}).then(v => {
-            address = address.concat(v);
-            //console.log(address);
-            window.location.href = address;
-        })
-      });
+        .on("change", function(d) {
+            let airport = d3.select(this).property("value");
+            let address = 'statistics.html?origin=';
+            address = address.concat(parsed.airline, '&dest=');
+
+            d3.csv(getFile, function(d){
+                if (d.AirPort == airport) {
+                    return d.AirID;
+                }}).then(v => {
+                address = address.concat(v);
+                if (Array.isArray(v) && v.length) {
+                    window.location.href = address;
+                }                //
+            })
+            //window.location.href = address;
+        });
+
 
     select.selectAll("option")
         .data(types)
@@ -126,9 +131,9 @@ function distinct_Types(rows) {
 
 function toProperCase(value) {
   var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase(); 
+  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
   for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase(); 
+    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
   }
   return result;
 }
@@ -223,6 +228,20 @@ function offHover(l) {
 }
 // --------------------------
 
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend');
+    // loop through our density intervals and generate a label with a colored square for each interval
+    div.innerHTML +=
+            '<p>Click or double click <br> on an airport to change the <br> departure city to that one</p>';
+
+    return div;
+};
+
+legend.addTo(map);
+
 
 // --------------------------
 // Hover Piece Below
@@ -242,17 +261,12 @@ info.update = function (props) {
         this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination'
         return
     }
-    // console.log(props)
-    // console.log(props.lat)
-    // console.log(props.lng)
-    //props.lat
-    //props.lng
     temp = data1.filter(function (row) {
         return row.D_lat == props.lat && row.D_long == props.lng
     })
-    // console.log(temp);
-    // console.log(temp.Count);
-    // console.log(temp.Origin);
+    console.log(temp);
+    console.log(temp.Count);
+    console.log(temp.Origin);
 
     this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
         '<b>' + props.lat + '</b><br />' + props.lng + ' people / mi<sup>2</sup>'
