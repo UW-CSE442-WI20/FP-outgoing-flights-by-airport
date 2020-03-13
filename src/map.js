@@ -15,10 +15,11 @@ var queryString = require('query-string');
 const parsed = queryString.parse(location.search);
 const getFile = require('../static/airport_names.csv');
 
-console.log(parsed.airline);
+//console.log(parsed.airline);
 
 /* Destination airports */
 var destinations = Array();
+var data1 = Array();
 /* Sorted destination airports */
 var types = [];
 var ID_Name = new Map();
@@ -83,16 +84,16 @@ d3.csv(csvData).then(function(data) {
 
     select
       .on("change", function(d) {
-        // var address = 'main.html?airline=';
-        // var AirPort = d3.select(this).property("value");
-        // d3.csv(getFile, function(d){
-        //   if (d.AirPort == AirPort) {
-        //       return d.AirID;
-        // }}).then(v => {
-        //     address = address.concat(v);
-        //     console.log(address);
-        //     window.location.href = address;
-        // })
+        var address = 'statistics.html?airline=';
+        var AirPort = d3.select(this).property("value");
+        d3.csv(getFile, function(d){
+          if (d.AirPort == AirPort) {
+              return d.AirID;
+        }}).then(v => {
+            address = address.concat(v);
+            //console.log(address);
+            window.location.href = address;
+        })
       });
 
     select.selectAll("option")
@@ -135,6 +136,8 @@ function toProperCase(value) {
   return result;
 }
 function draw_data(data){
+
+    data1 = data;
 
     console.log(data);
 
@@ -239,10 +242,27 @@ function draw_data(data){
 
  // method that we will use to update the control based on feature properties passed
  info.update = function (props) {
-     this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
-         '<b>' + "adsada" + '</b><br />' + "damsd" + ' people / mi<sup>2</sup>'
+    
+    if (props == null){
+        this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination'
+        return
+    }
+    // console.log(props)
+    // console.log(props.lat)
+    // console.log(props.lng)
+    //props.lat
+    //props.lng
+    temp = data1.filter(function (row) {
+        return row.D_lat == props.lat && row.D_long == props.lng
+    })
+    // console.log(temp);
+    // console.log(temp.Count);
+    // console.log(temp.Origin);
+
+    this._div.innerHTML = '<h4>Flight Info</h4>' +  (temp ?
+         '<b>' + temp.Origin + '</b><br />' + temp.Count + ' people / mi<sup>2</sup>'
          : 'Hover over a destination');
- };
+};
 
  info.addTo(map);
 
@@ -253,21 +273,19 @@ function draw_data(data){
 const airportID = parsed.airline;
 
 setTimeout(function() {
-    document.getElementById("airportName").innerHTML = airportID;
-    tallyData();
-}, 500);
-
-function findAirportByID(id) {
-    let airport = "";
     d3.csv(getFile).then(function(data) {
         data.forEach(function(d) {
-            if(d.AirID === id) {
-                return d.AirPort;
+            d.Airline = d.Airline
+            d.AirID = d.AirID
+    
+            if (d.AirID == airportID) {
+                document.getElementById("airportName").innerHTML = d.AirPort;
+               // console.log(d.AirPort);
             }
         });
     });
-    return airport;
-}
+    tallyData();
+}, 500);
 
 function tallyData() {
     d3.csv(csvData).then(function(data) {
@@ -297,7 +315,7 @@ function tallyData() {
         let airportMaxCount = 0;
         map.forEach(function(value, key, map) {
             if(value > airportMaxCount) {
-                airportMaxID = key;
+                airportMaxID = ID_Name.get(key);
                 airportMaxCount = value;
             }
         });
@@ -310,101 +328,3 @@ function tallyData() {
         document.getElementById("avgFlightTime").innerText = (totalFlightTime / totalCount).toFixed(2);
     });
 }
-
-// ------------------------
-// The bar chart
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-var x = d3.scaleBand()
-          .range([0, width])
-          .padding(0.1);
-var y = d3.scaleLinear()
-          .range([height, 0]);
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", 
-          "translate(" + margin.left + "," + margin.top + ")");
-
-// Default will be set to january flights, need to change file
-// based on selected month
-const JanData = require('../static/jan.csv');
-d3.csv(JanData).then(function(data) {
-    data.forEach(function(d) {
-        d.Origin = d.Origin;
-        d.Dest = d.Dest
-        d.Date = d.Date
-        //console.log(d.Date)
-        d.Distance = +d.Distance
-        d.Count = +d.Count    
-    });
-    
-  const results = data.filter(function (row) {
-    return (row.Origin == 'SEA' && row.Dest == 'ORD') // Need to change ariports based on selection
-  });
-
-  //console.log(results);
-  x.domain(results.map(function(d) { return d.Date; }));
-  y.domain([0, d3.max(results, function(d) { return d.Count; })]);
-
-  // add bars
-  svg.selectAll("#bar")
-      .data(results)
-      .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.Date); })
-      .attr("width", x.bandwidth())
-      .attr("y", function(d) { return y(d.Count); })
-      .attr("height", function(d) { return height - y(d.Count); })
-      .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut)
-
-  //x axis
-  svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(10))
-      .selectAll("text")	
-        .style("text-anchor", "end")
-        .attr("transform", "rotate(-65)");
-
-  // y axis
-  svg.append("g")
-      .call(d3.axisLeft(y));
-
-});
-// define feagure div for tip
-var div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
-    .style("opacity", 0);
-
-// mouse handle the 
-function handleMouseOver(d, i) {
-  toolTipMap(`Name of Airport level ${d.Count} in date: ${d.Date}`);
-  // Use D3 to select element, change color and size
-  d3.select(this).style("opacity", .7);
-
-}
-
-function handleMouseOut(d, i) { 
-  // Use D3 to select element, change color and size
-  //console.log("mouse", this);
-  div.transition()		
-                .duration(500)		
-                .style("opacity", 0);	
-  d3.select(this).style("opacity", 1);
-}
-
-// mouse click
-function toolTipMap(d){
-  div.transition()    
-        .duration(150)    
-        .style("opacity", .9);
-      div.html(d) 
-        .style("left", (d3.event.pageX) + "px")   
-        .style("top", (d3.event.pageY - 28) + "px");
-}
-

@@ -28933,12 +28933,33 @@ d3.csv(csvData).then(function (data) {
     return y(d.Count);
   }).attr("height", function (d) {
     return height - y(d.Count);
-  }); //x axis
+  }).on("mouseover", handleMouseOver).on("mouseout", handleMouseOut); //x axis
 
   svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x).ticks(10)).selectAll("text").style("text-anchor", "end").attr("transform", "rotate(-65)"); // y axis
 
   svg.append("g").call(d3.axisLeft(y));
-});
+}); // define feagure div for tip
+
+var div = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0); // mouse handle the 
+
+function handleMouseOver(d, i) {
+  toolTipMap("Name of Airport level ".concat(d.Count, " in date: ").concat(d.Date)); // Use D3 to select element, change color and size
+
+  d3.select(this).style("opacity", .7);
+}
+
+function handleMouseOut(d, i) {
+  // Use D3 to select element, change color and size
+  //console.log("mouse", this);
+  div.transition().duration(500).style("opacity", 0);
+  d3.select(this).style("opacity", 1);
+} // mouse click
+
+
+function toolTipMap(d) {
+  div.transition().duration(150).style("opacity", .9);
+  div.html(d).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
+}
 },{"d3":"../node_modules/d3/index.js","../static/jan.csv":"../static/jan.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -28967,7 +28988,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61944" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52350" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
