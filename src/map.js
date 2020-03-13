@@ -79,23 +79,20 @@ d3.csv(csvData).then(function(data) {
       .append("div")
       .append("select")
 
-    select
-        .on("change", function(d) {
-            let airport = d3.select(this).property("value");
-            let address = 'statistics.html?origin=';
-            address = address.concat(parsed.airline, '&dest=');
-
-            d3.csv(getFile, function(d){
-                if (d.AirPort == airport) {
-                    return d.AirID;
-                }}).then(v => {
-                address = address.concat(v);
-                if (Array.isArray(v) && v.length) {
-                    window.location.href = address;
-                }                //
-            })
-            //window.location.href = address;
-        });
+      select
+      .on("change", function(d) {
+        var address = 'statistics.html?airline=';
+        var AirPort = d3.select(this).property("value");
+        d3.csv(getFile, function(d){
+          if (d.AirPort == AirPort) {
+              return d.AirID;
+        }}).then(v => {
+            address = address.concat(v);
+            //console.log(address);
+            window.location.href = address;
+        })
+        //
+      });
 
 
     select.selectAll("option")
@@ -274,40 +271,6 @@ info.update = function (props) {
 };
 
 info.addTo(map);
-
-// --------------------------
-
-
-d3.csv(getFile, function(d){
-    return {
-        type : d.AirPort,
-        code : d.AirID
-    };
-}).then(function(data) {
-    for(var i = 0; i < data.length; i++){
-        var id = data[i].code;
-        ID_Name.set(id, data[i].type);
-    }
-});
-
-function distinct_Types(rows) {
-    for(var i = 0; i < rows.length; i++) {
-        types[i] = ID_Name.get(rows[i]);
-    }
-    types = [...new Set(types)].sort();
-    types.unshift("Please Select an AirPort");
-    console.log(types)
-    return types;
-}
-
-function toProperCase(value) {
-    var words = value.split(" ");
-    var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-    for (var i = 1; i < words.length; i++) {
-        result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-    }
-    return result;
-}
 
 // --------------------------
 // DISPLAY SUMMARY INFO BELOW

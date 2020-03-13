@@ -97,7 +97,7 @@ d3.csv(csvData).then(function(data) {
     });
 
   const results = data.filter(function (row) {
-    return (row.Origin == parsed.airline) // Need to change ariports based on selection
+    return (row.Origin == parsed.airline)
   });
 
     console.log(results);
