@@ -188,6 +188,15 @@ a:hover {
 }
 .bar { fill: white; }
 
+div.tooltip {	
+    position: absolute;			
+    text-align: center;								
+    padding: 2px;				
+    font: 16px sans-serif;		
+    background: rgb(0, 139, 139);
+    border-radius: 4px;
+    color: black;	
+  }
 .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
