@@ -29393,6 +29393,8 @@ var d3 = require('d3');
 var queryString = require('query-string');
 
 var parsed = queryString.parse(location.search);
+document.getElementById("origin").innerText = parsed.origin;
+document.getElementById("dest").innerText = parsed.dest;
 
 var csvData = require('../static/months/jan.csv');
 
@@ -29452,7 +29454,7 @@ d3.csv(csvData).then(function (data) {
     d.Count = +d.Count;
   });
   var results = data.filter(function (row) {
-    return row.Origin == parsed.airline; // return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
+    return row.Origin == parsed.origin && row.Dest == parsed.dest; // Need to change ariports based on selection
   });
   console.log(results);
   x.domain(results.map(function (d) {
@@ -29523,7 +29525,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50786" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53427" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

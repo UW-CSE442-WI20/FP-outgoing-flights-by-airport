@@ -1,6 +1,9 @@
 var d3 = require('d3');
 var queryString = require('query-string');
 const parsed = queryString.parse(location.search);
+document.getElementById("origin").innerText = parsed.origin;
+document.getElementById("dest").innerText = parsed.dest;
+
 const csvData = require('../static/months/jan.csv');
 console.log(parsed);
 //const datePattern = /\.*-(\d{01})-\.*/;
@@ -66,8 +69,7 @@ d3.csv(csvData).then(function(data) {
     });
 
   const results = data.filter(function (row) {
-    return (row.Origin == parsed.airline)
-    // return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
+    return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
   });
 
     console.log(results);
