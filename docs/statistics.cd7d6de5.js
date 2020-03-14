@@ -29107,340 +29107,152 @@ exports.stringifyUrl = function (input, options) {
 
   return "".concat(url).concat(queryString).concat(hash);
 };
-},{"strict-uri-encode":"A2is","decode-uri-component":"pWxZ","split-on-first":"t7Jq"}],"TLdC":[function(require,module,exports) {
-module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/airport_names.43451b3f.csv";
-},{}],"If5K":[function(require,module,exports) {
-module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/new_temp.5b5fbf84.csv";
-},{}],"DTJI":[function(require,module,exports) {
-module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/2018_grouped_no_dates_with_cords.71b93ab3.csv";
-},{}],"quTw":[function(require,module,exports) {
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-/*
-CSE 442: Data Visualization
-Assignment 3: Interactive Visualization
-Names:  Anika Padwekar
-        Kwing Li
-        McKinnon Williams
-        Nicole Garakanidze
-        Khai Tran
-Sources:    https://github.com/UW-CSE442-WI20/A3-accidents-in-the-us (1)
-            http://bl.ocks.org/almccon/1bcde7452450c153d8a0684085f249fd (2)
-*/
+},{"strict-uri-encode":"A2is","decode-uri-component":"pWxZ","split-on-first":"t7Jq"}],"q1jX":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/jan.84a9e589.csv";
+},{}],"LPQa":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/feb.ca838e10.csv";
+},{}],"vcIA":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/march.d140fcd6.csv";
+},{}],"CKus":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/april.b9013e07.csv";
+},{}],"Es5Q":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/may.9a7da064.csv";
+},{}],"BABy":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/june.bcbb4022.csv";
+},{}],"g4cs":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/july.8941e801.csv";
+},{}],"AZAq":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/august.32aa6c90.csv";
+},{}],"ubfj":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/sept.6905496d.csv";
+},{}],"k9Mg":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/oct.d675c4bd.csv";
+},{}],"B4fn":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/nov.9f165e7d.csv";
+},{}],"imWV":[function(require,module,exports) {
+module.exports = "https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/dec.ca2f103b.csv";
+},{}],"iwL0":[function(require,module,exports) {
 var d3 = require('d3');
 
 var queryString = require('query-string');
 
 var parsed = queryString.parse(location.search);
+document.getElementById("origin").innerText = parsed.origin;
+document.getElementById("dest").innerText = parsed.dest;
 
-var getFile = require('../static/airport_names.csv'); //console.log(parsed.airline);
+var csvData = require('../static/months/jan.csv'); //console.log(parsed);
+//const datePattern = /\.*-(\d{01})-\.*/;
+// Graph visualization copied from example found at:
+// https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
-/* Destination airports */
 
+var margin = {
+  top: 20,
+  right: 20,
+  bottom: 30,
+  left: 40
+},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+var x = d3.scaleBand().range([0, width]).padding(0.1);
+var y = d3.scaleLinear().range([height, 0]);
+var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var destinations = Array();
-/*                      */
-
-var data1 = Array();
-/* Sorted destination airports */
-
-var types = [];
-var ID_Name = new Map(); // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
-
-var map = L.map('mapv1') // Center on US
-.setView([47.396413, -100.095262], 2.7);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  minZoom: 2 // Prevent ths duplicated display of countries on zoom
-
-}).addTo(map);
-/*
-Load in all the airports as circles so we can click
-on them and be able to change the display interactively
-*/
-
-var airPorts = require('../static/new_temp.csv');
-
-d3.csv(airPorts).then(function (data) {
-  data.forEach(function (d) {
-    d.Airline = d.Airline;
-    d.AirID = d.AirID;
-    d.X = +d.X;
-    d.Y = +d.Y;
-  });
-  draw_airports(data);
-});
-
-var csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
-
-d3.csv(csvData).then(function (data) {
-  data.forEach(function (d) {
-    d.Origin = d.Origin;
-    d.Dest = d.Dest;
-    d.Time = +d.Time;
-    d.Distance = +d.Distance;
-    d.Count = +d.Count;
-    d.O_lat = +d.O_lat;
-    d.O_long = +d.O_long;
-    d.D_lat = +d.D_lat;
-    d.D_long = +d.D_long;
-  });
-  draw_data(data.filter(function (row) {
-    return row.Origin == parsed.airline;
-  }));
-  var select = d3.select(".dropdown1").append("div").append("select");
-  select.on("change", function (d) {
-    var airport = d3.select(this).property("value");
-    var address = 'statistics.html?origin=';
-    address = address.concat(parsed.airline, '&dest=');
-    d3.csv(getFile, function (d) {
-      if (d.AirPort == airport) {
-        return d.AirID;
-      }
-    }).then(function (v) {
-      address = address.concat(v);
-
-      if (Array.isArray(v) && v.length) {
-        window.location.href = address;
-      }
-    });
-  });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
-    return d;
-  }).text(function (d) {
-    return toProperCase(d);
-  });
-}); // --------------------------
-//
-// --------------------------
-
-d3.csv(getFile, function (d) {
-  return {
-    type: d.AirPort,
-    code: d.AirID
-  };
-}).then(function (data) {
-  for (var i = 0; i < data.length; i++) {
-    var id = data[i].code;
-    ID_Name.set(id, data[i].type);
+function updateCSV(month) {
+  if (month == "January") {
+    csvData = require("../static/months/jan.csv");
+  } else if (month == "February") {
+    csvData = require('../static/months/feb.csv');
+  } else if (month == "March") {
+    csvData = require('../static/months/march.csv');
+  } else if (month == "April") {
+    csvData = require('../static/months/april.csv');
+  } else if (month == "May") {
+    csvData = require('../static/months/may.csv');
+  } else if (month == "June") {
+    csvData = require('../static/months/june.csv');
+  } else if (month == "July") {
+    csvData = require('../static/months/july.csv');
+  } else if (month == "August") {
+    csvData = require('../static/months/august.csv');
+  } else if (month == "September") {
+    csvData = require('../static/months/sept.csv');
+  } else if (month == "October") {
+    csvData = require('../static/months/oct.csv');
+  } else if (month == "November") {
+    csvData = require('../static/months/nov.csv');
+  } else {
+    csvData = require('../static/months/dec.csv');
   }
-});
-
-function distinct_Types(rows) {
-  for (var i = 0; i < rows.length; i++) {
-    types[i] = ID_Name.get(rows[i]);
-  }
-
-  types = _toConsumableArray(new Set(types)).sort();
-  types.unshift("Please Select an AirPort"); //console.log(types)
-
-  return types;
-}
-
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-
-  return result;
-} // --------------------------
-// Drawing Functions Below
-// --------------------------
+} // Default will be set to january flights, need to change file
+// based on selected month
 
 
-function draw_data(data) {
-  data.forEach(function (d) {
-    destinations.push(d.Dest);
-    data1.push(d);
-    L.circle([d.O_lat, d.O_long], {
-      color: "red",
-      fillColor: "#f03",
-      fillOpacity: 0.5,
-      radius: 25000,
-      Opacity: 0.2
-    }).addTo(map);
-    L.circle([d.D_lat, d.D_long], {
-      color: "red",
-      fillColor: "#f03",
-      fillOpacity: 0,
-      radius: 30000,
-      opacity: 0.2
-    }).on({
-      mouseover: onHover,
-      mouseout: offHover,
-      click: onMapClick,
-      dblclick: onMapClick
-    }).addTo(map).bringToFront();
-    var pointA = new L.LatLng(d.O_lat, d.O_long);
-    var pointB = new L.LatLng(d.D_lat, d.D_long);
-    var latlngs = Array();
-    latlngs.push(pointA);
-    latlngs.push(pointB);
-    L.polyline(latlngs, {
-      color: 'blue',
-      weight: 1
-    }).addTo(map);
-  });
-  destinations = distinct_Types(destinations);
-}
-/*
-Function to draw the airports that are gotten from the airports csv file
-*/
-
-
-function draw_airports(data) {
-  data.forEach(function (d) {
-    L.circle([d.X, d.Y], {
-      fillOpacity: 0,
-      opacity: 0,
-      radius: 25000
-    }).on({
-      click: onMapClick,
-      dblclick: onMapClick
-    }).addTo(map);
-    L.circle([d.X, d.Y], {
-      color: "blue",
-      fillColor: "#f03",
-      fillOpacity: 0,
-      radius: 1000,
-      weight: 1
-    }).on('dblclick', onMapClick).addTo(map);
-  });
-} // --------------------------
-// Map Interactions Below
-// --------------------------
-
-
-function onMapClick(l) {
-  d3.csv(airPorts).then(function (data) {
+function draw(fileData) {
+  d3.csv(fileData).then(function (data) {
     data.forEach(function (d) {
-      d.X = +d.X;
-      d.Y = +d.Y;
-
-      if (l.latlng.lat == d.X && l.latlng.lng == d.Y) {
-        var address = 'main.html?airline=';
-        address = address.concat(d.AirID);
-        window.location.href = address;
-      }
+      d.Origin = d.Origin;
+      d.Dest = d.Dest;
+      d.Date = d.Date;
+      console.log(d.Date);
+      d.Distance = +d.Distance;
+      d.Count = +d.Count;
     });
+    var results = data.filter(function (row) {
+      return row.Origin == parsed.origin && row.Dest == parsed.dest;
+    });
+    console.log(results);
+    x.domain(results.map(function (d) {
+      return d.Date;
+    }));
+    y.domain([0, d3.max(results, function (d) {
+      return d.Count;
+    })]); // add bars
+
+    svg.selectAll(".bar").remove();
+    svg.selectAll("text").remove();
+    svg.selectAll(".bar").data(results).enter().append("rect").attr("class", "bar").attr("x", function (d) {
+      return x(d.Date);
+    }).attr("width", x.bandwidth()).attr("y", function (d) {
+      return y(d.Count);
+    }).attr("height", function (d) {
+      return height - y(d.Count);
+    }).on("mouseover", handleMouseOver).on("mouseout", handleMouseOut); //x axis
+
+    svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x).ticks(10)).selectAll("text").style("text-anchor", "end").attr("transform", "rotate(-65)"); // y axis
+
+    svg.append("g").call(d3.axisLeft(y));
   });
+} // define feagure div for tip
+
+
+var div = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0); // mouse handle the 
+
+function handleMouseOver(d, i) {
+  toolTipMap("There are ".concat(d.Count, " flights in date: ").concat(d.Date)); // Use D3 to select element, change color and size
+
+  d3.select(this).style("opacity", .7);
 }
 
-function onHover(l) {
-  info.update(l.latlng);
+function handleMouseOut(d, i) {
+  // Use D3 to select element, change color and size
+  //console.log("mouse", this);
+  div.transition().duration(500).style("opacity", 0);
+  d3.select(this).style("opacity", 1);
+} // mouse click
+
+
+function toolTipMap(d) {
+  div.transition().duration(150).style("opacity", .9);
+  div.html(d).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
 }
 
-function offHover(l) {
-  info.update();
-} // --------------------------
-// Map Instruction Pane Below
-// --------------------------
-
-
-var legend = L.control({
-  position: 'bottomright'
-});
-
-legend.onAdd = function (map) {
-  var div = L.DomUtil.create('div', 'info legend'); // loop through our density intervals and generate a label with a colored square for each interval
-
-  div.innerHTML += '<p>Click or double click <br> on an airport to change the <br> departure city to that one</p>';
-  return div;
-};
-
-legend.addTo(map); // --------------------------
-// Hover Piece Below
-// --------------------------
-
-var info = L.control();
-
-info.onAdd = function (map) {
-  this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-
-  this.update();
-  return this._div;
-}; // method that we will use to update the control based on feature properties passed
-
-
-info.update = function (props) {
-  if (props == null) {
-    this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination';
-    return;
-  }
-
-  var closest_point = data1[0];
-  var min_distance = 10000000000000000;
-  data1.forEach(function (d) {
-    var latlngs = Array();
-    latlngs.push(d.D_lat);
-    latlngs.push(d.D_long);
-
-    if (props.distanceTo(latlngs) < min_distance) {
-      min_distance = props.distanceTo(latlngs);
-      closest_point = d;
-    }
-  });
-  this._div.innerHTML = '<h4>Flight Info</h4>' + (props ? '<b>' + "Airport: " + closest_point.Dest + '</b><br />' + closest_point.Count + ' flights' + '</b><br />' + closest_point.Time.toFixed(0) + ' minutes' + '</b><br />' + closest_point.Distance.toFixed(0) + ' miles' : 'Hover over a destination');
-};
-
-info.addTo(map); // --------------------------
-// DISPLAY SUMMARY INFO BELOW
-// --------------------------
-
-var airportID = parsed.airline;
-setTimeout(function () {
-  document.getElementById("airportName").innerHTML = ID_Name.get(airportID);
-  tallyData();
-}, 500);
-
-function tallyData() {
-  d3.csv(csvData).then(function (data) {
-    // map holds, key: dest airport, value: num of flights to key airport
-    var map = new Map();
-    var totalCount = 0;
-    var totalFlightTime = 0.0; // finding all flights where origin is selected airport
-
-    data.forEach(function (d) {
-      if (d.Origin === airportID) {
-        // incrementing total count by the flight count
-        var count = parseInt(d.Count);
-        totalCount += count; // incrementing total flight time by the flight time and num of flights
-
-        totalFlightTime += parseFloat(d.Time) * count; // tallying counts for each dest airport
-
-        if (map.has(d.Dest)) {
-          var prev = map.get(d.Dest);
-          map.set(d.Dest, prev + count);
-        } else {
-          map.set(d.Dest, count);
-        }
-      }
-    }); // finding dest airport with most flights from origin
-
-    var airportMaxID = "";
-    var airportMaxCount = 0;
-    map.forEach(function (value, key, map) {
-      if (value > airportMaxCount) {
-        airportMaxID = ID_Name.get(key);
-        airportMaxCount = value;
-      }
-    }); // updating values to display on html
-
-    document.getElementById("airportCount").innerText = map.size;
-    document.getElementById("airportMost").innerText = airportMaxID;
-    document.getElementById("airportMostNum").innerText = airportMaxCount;
-    document.getElementById("numFlights").innerText = totalCount;
-    document.getElementById("avgFlightTime").innerText = (totalFlightTime / totalCount).toFixed(2);
-  });
+function updateData(month) {
+  console.log(month);
+  updateCSV(month);
+  draw(csvData);
 }
-},{"d3":"UzF0","query-string":"FvpG","../static/airport_names.csv":"TLdC","../static/new_temp.csv":"If5K","../static/2018_grouped_no_dates_with_cords.csv":"DTJI"}]},{},["quTw"], null)
-//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/map.ff04406c.js.map
+
+window.updateData = updateData;
+},{"d3":"UzF0","query-string":"FvpG","../static/months/jan.csv":"q1jX","../static/months/feb.csv":"LPQa","../static/months/march.csv":"vcIA","../static/months/april.csv":"CKus","../static/months/may.csv":"Es5Q","../static/months/june.csv":"BABy","../static/months/july.csv":"g4cs","../static/months/august.csv":"AZAq","../static/months/sept.csv":"ubfj","../static/months/oct.csv":"k9Mg","../static/months/nov.csv":"B4fn","../static/months/dec.csv":"imWV"}]},{},["iwL0"], null)
+//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/statistics.cd7d6de5.js.map

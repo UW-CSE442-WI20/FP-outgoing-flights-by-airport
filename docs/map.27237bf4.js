@@ -29405,7 +29405,18 @@ var data1 = Array();
 /* Sorted destination airports */
 
 var types = [];
-var ID_Name = new Map(); // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
+var ID_Name = new Map();
+d3.csv(getFile, function (d) {
+  return {
+    type: d.AirPort,
+    code: d.AirID
+  };
+}).then(function (data) {
+  for (var i = 0; i < data.length; i++) {
+    var id = data[i].code;
+    ID_Name.set(id, data[i].type);
+  }
+}); // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 
 var map = L.map('mapv1') // Center on US
 .setView([47.396413, -100.095262], 2.7);
@@ -29431,7 +29442,46 @@ d3.csv(airPorts).then(function (data) {
   draw_airports(data);
 });
 
-var csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
+function draw_data(data) {
+  data.forEach(function (d) {
+    destinations.push(d.Dest);
+    data1.push(d);
+    L.circle([d.O_lat, d.O_long], {
+      color: "red",
+      fillColor: "#f03",
+      fillOpacity: 0.5,
+      radius: 25000,
+      Opacity: 0.2
+    }).addTo(map);
+    L.circle([d.D_lat, d.D_long], {
+      color: "red",
+      fillColor: "#f03",
+      fillOpacity: 0.5,
+      radius: 30000,
+      Opacity: 0.2
+    }).on({
+      mouseover: onHover,
+      mouseout: offHover,
+      click: onMapClick,
+      dblclick: onMapClick
+    }).addTo(map).bringToFront();
+    var pointA = new L.LatLng(d.O_lat, d.O_long);
+    var pointB = new L.LatLng(d.D_lat, d.D_long);
+    var latlngs = Array();
+    latlngs.push(pointA);
+    latlngs.push(pointB);
+    L.polyline(latlngs, {
+      color: 'blue',
+      weight: 1
+    }).addTo(map);
+  });
+  destinations = distinct_Types(destinations);
+}
+
+var csvData = require('../static/2018_grouped_no_dates_with_cords.csv'); //-----------
+// dropdown list
+//-----------
+
 
 d3.csv(csvData).then(function (data) {
   data.forEach(function (d) {
@@ -29465,13 +29515,13 @@ d3.csv(csvData).then(function (data) {
       }
     });
   });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
+  select.selectAll("option").data(destinations).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
     return d;
   }).text(function (d) {
-    return toProperCase(d);
+    return d;
   });
 }); // --------------------------
-//
+// Dropdown list for airPort
 // --------------------------
 
 d3.csv(getFile, function (d) {
@@ -29487,6 +29537,8 @@ d3.csv(getFile, function (d) {
 });
 
 function distinct_Types(rows) {
+  types = [];
+
   for (var i = 0; i < rows.length; i++) {
     types[i] = ID_Name.get(rows[i]);
   }
@@ -29495,17 +29547,6 @@ function distinct_Types(rows) {
   types.unshift("Please Select an AirPort"); //console.log(types)
 
   return types;
-}
-
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-
-  return result;
 } // --------------------------
 // Drawing Functions Below
 // --------------------------
@@ -29724,7 +29765,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56239" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59607" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -2,7 +2,7 @@
 
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
 "November", "December"];
-
+var month = "January";
 // Step
  var sliderStep = d3
    .sliderRight()
@@ -18,8 +18,9 @@ var months = ["January", "February", "March", "April", "May", "June", "July", "A
    .default(0)
    .handle(d3.symbol().type(d3.symbolCircle).size(200))
    .on('onchange', val => {
-     d3.select('g.value-step').text(months[val])
-     document.getElementById("value-step").value=months[val]
+     d3.select('g.value-step').text(months[val]);
+     document.getElementById("value-step").value=months[val];
+     window.updateData(months[val]);
    });
 
  var gStep = d3

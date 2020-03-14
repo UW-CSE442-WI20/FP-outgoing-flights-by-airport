@@ -29386,8 +29386,6 @@ module.exports = "/nov.ca95b039.csv";
 },{}],"../static/months/dec.csv":[function(require,module,exports) {
 module.exports = "/dec.b6410f83.csv";
 },{}],"statistics.js":[function(require,module,exports) {
-function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
-
 var d3 = require('d3');
 
 var queryString = require('query-string');
@@ -29396,11 +29394,11 @@ var parsed = queryString.parse(location.search);
 document.getElementById("origin").innerText = parsed.origin;
 document.getElementById("dest").innerText = parsed.dest;
 
-var csvData = require('../static/months/jan.csv');
-
-console.log(parsed); //const datePattern = /\.*-(\d{01})-\.*/;
+var csvData = require('../static/months/jan.csv'); //console.log(parsed);
+//const datePattern = /\.*-(\d{01})-\.*/;
 // Graph visualization copied from example found at:
 // https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
+
 
 var margin = {
   top: 20,
@@ -29416,66 +29414,71 @@ var svg = d3.select("body").append("svg").attr("width", width + margin.left + ma
 
 function updateCSV(month) {
   if (month == "January") {
-    csvData = (_readOnlyError("csvData"), require("../static/months/jan.csv"));
+    csvData = require("../static/months/jan.csv");
   } else if (month == "February") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/feb.csv'));
+    csvData = require('../static/months/feb.csv');
   } else if (month == "March") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/march.csv'));
+    csvData = require('../static/months/march.csv');
   } else if (month == "April") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/april.csv'));
+    csvData = require('../static/months/april.csv');
   } else if (month == "May") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/may.csv'));
+    csvData = require('../static/months/may.csv');
   } else if (month == "June") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/june.csv'));
+    csvData = require('../static/months/june.csv');
   } else if (month == "July") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/july.csv'));
+    csvData = require('../static/months/july.csv');
   } else if (month == "August") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/august.csv'));
+    csvData = require('../static/months/august.csv');
   } else if (month == "September") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/sept.csv'));
+    csvData = require('../static/months/sept.csv');
   } else if (month == "October") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/oct.csv'));
+    csvData = require('../static/months/oct.csv');
   } else if (month == "November") {
-    csvData = (_readOnlyError("csvData"), require('../static/months/nov.csv'));
+    csvData = require('../static/months/nov.csv');
   } else {
-    csvData = (_readOnlyError("csvData"), require('../static/months/dec.csv'));
+    csvData = require('../static/months/dec.csv');
   }
 } // Default will be set to january flights, need to change file
 // based on selected month
 
 
-d3.csv(csvData).then(function (data) {
-  data.forEach(function (d) {
-    d.Origin = d.Origin;
-    d.Dest = d.Dest;
-    d.Date = d.Date;
-    console.log(d.Date);
-    d.Distance = +d.Distance;
-    d.Count = +d.Count;
+function draw(fileData) {
+  d3.csv(fileData).then(function (data) {
+    data.forEach(function (d) {
+      d.Origin = d.Origin;
+      d.Dest = d.Dest;
+      d.Date = d.Date;
+      console.log(d.Date);
+      d.Distance = +d.Distance;
+      d.Count = +d.Count;
+    });
+    var results = data.filter(function (row) {
+      return row.Origin == parsed.origin && row.Dest == parsed.dest;
+    });
+    console.log(results);
+    x.domain(results.map(function (d) {
+      return d.Date;
+    }));
+    y.domain([0, d3.max(results, function (d) {
+      return d.Count;
+    })]); // add bars
+
+    svg.selectAll(".bar").remove();
+    svg.selectAll("text").remove();
+    svg.selectAll(".bar").data(results).enter().append("rect").attr("class", "bar").attr("x", function (d) {
+      return x(d.Date);
+    }).attr("width", x.bandwidth()).attr("y", function (d) {
+      return y(d.Count);
+    }).attr("height", function (d) {
+      return height - y(d.Count);
+    }).on("mouseover", handleMouseOver).on("mouseout", handleMouseOut); //x axis
+
+    svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x).ticks(10)).selectAll("text").style("text-anchor", "end").attr("transform", "rotate(-65)"); // y axis
+
+    svg.append("g").call(d3.axisLeft(y));
   });
-  var results = data.filter(function (row) {
-    return row.Origin == parsed.origin && row.Dest == parsed.dest; // Need to change ariports based on selection
-  });
-  console.log(results);
-  x.domain(results.map(function (d) {
-    return d.Date;
-  }));
-  y.domain([0, d3.max(results, function (d) {
-    return d.Count;
-  })]); // add bars
+} // define feagure div for tip
 
-  svg.selectAll(".bar").data(results).enter().append("rect").attr("class", "bar").attr("x", function (d) {
-    return x(d.Date);
-  }).attr("width", x.bandwidth()).attr("y", function (d) {
-    return y(d.Count);
-  }).attr("height", function (d) {
-    return height - y(d.Count);
-  }).on("mouseover", handleMouseOver).on("mouseout", handleMouseOut); //x axis
-
-  svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x).ticks(10)).selectAll("text").style("text-anchor", "end").attr("transform", "rotate(-65)"); // y axis
-
-  svg.append("g").call(d3.axisLeft(y));
-}); // define feagure div for tip
 
 var div = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0); // mouse handle the 
 
@@ -29497,6 +29500,14 @@ function toolTipMap(d) {
   div.transition().duration(150).style("opacity", .9);
   div.html(d).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
 }
+
+function updateData(month) {
+  console.log(month);
+  updateCSV(month);
+  draw(csvData);
+}
+
+window.updateData = updateData;
 },{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/months/jan.csv":"../static/months/jan.csv","../static/months/feb.csv":"../static/months/feb.csv","../static/months/march.csv":"../static/months/march.csv","../static/months/april.csv":"../static/months/april.csv","../static/months/may.csv":"../static/months/may.csv","../static/months/june.csv":"../static/months/june.csv","../static/months/july.csv":"../static/months/july.csv","../static/months/august.csv":"../static/months/august.csv","../static/months/sept.csv":"../static/months/sept.csv","../static/months/oct.csv":"../static/months/oct.csv","../static/months/nov.csv":"../static/months/nov.csv","../static/months/dec.csv":"../static/months/dec.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -29525,7 +29536,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56239" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59607" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -4,7 +4,7 @@ const parsed = queryString.parse(location.search);
 document.getElementById("origin").innerText = parsed.origin;
 document.getElementById("dest").innerText = parsed.dest;
 
-const csvData = require('../static/months/jan.csv');
+var csvData = require('../static/months/jan.csv');
 //console.log(parsed);
 //const datePattern = /\.*-(\d{01})-\.*/;
 
@@ -58,7 +58,8 @@ function updateCSV(month) {
 
 // Default will be set to january flights, need to change file
 // based on selected month
-d3.csv(csvData).then(function(data) {
+function draw(fileData) {
+  d3.csv(fileData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
         d.Dest = d.Dest
@@ -78,6 +79,9 @@ d3.csv(csvData).then(function(data) {
 
 
     // add bars
+    svg.selectAll(".bar").remove()
+    svg.selectAll("text").remove()
+
     svg.selectAll(".bar")
         .data(results)
         .enter().append("rect")
@@ -101,7 +105,10 @@ d3.csv(csvData).then(function(data) {
     svg.append("g")
         .call(d3.axisLeft(y));
 
-});
+  });
+}
+
+
 // define feagure div for tip
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -133,3 +140,12 @@ function toolTipMap(d){
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
 }
+
+function updateData(month) {
+  console.log(month);
+  updateCSV(month);
+  draw(csvData);
+}
+
+draw(csvData);
+window.updateData = updateData;

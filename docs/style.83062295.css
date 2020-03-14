@@ -214,7 +214,9 @@ div.tooltip {
 }
 
 .sliders {
+    align-content: center;
     flex: 1;
+    margin-left: 100px;
 }
 
 #slider-simple text{
@@ -223,4 +225,4 @@ div.tooltip {
 }
 
 
-/*# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/style.8370b582.css.map */
+/*# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/style.83062295.css.map */
