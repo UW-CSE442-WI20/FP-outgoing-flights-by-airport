@@ -1,0 +1,226 @@
+/*
+CSE 442: Data Visualization
+Final Project
+Names:  Anika Padwekar
+        Khai Tran
+        Kwing Li
+        McKinnon Williams
+        Nicole Garakanidze
+*/
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display&display=swap');
+
+html, body {
+    width: 99%;
+    height: 97%;
+}
+
+body {
+    background-color: #222222;
+    color: #666666;
+    font-family: 'Playfair Display', serif;
+}
+
+h1 {
+    text-align: center;
+    color: #d1d1d1;
+    margin: 25px;
+    font-size: 30px;
+}
+
+footer {
+    margin-top: 100px;
+    margin-bottom: 10px;
+    text-align: right;
+    font-size: 12px;
+}
+
+u {
+    color: #888888;
+}
+
+p {
+    /*text-indent: 30px;*/
+    line-height: 1.5;
+}
+
+.flex-container1 {
+    min-height: 85%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-container2 {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 40px;
+}
+
+#mapv1 {
+    width: 1000px;
+    height: 500px;
+    border: 3px solid #d1d1d1;
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-top: 10px;
+}
+
+#nav {
+    flex-basis: 100%;
+    margin: 10px;
+    font-size: 20px;
+    width: 50%;
+}
+
+#nav-stats {
+    margin: 10px;
+    font-size: 20px;
+    text-align: right;
+}
+
+#info {
+    width: 50%;
+}
+
+.grid-container-main {
+    margin: 40px;
+    /* flex-direction: row;
+    grid-template-columns: auto auto; */
+}
+
+.flex-container3 {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+#map {
+    /*border: 1px #ccc solid;*/
+    flex: 2;
+    margin: 40px;
+    width: 50%;
+}
+
+
+svg {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    margin: 0 auto;
+}
+select {
+    width: 100%;
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.342);
+    font-family: 'Roboto Mono', monospace;
+}
+
+text, p, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.grid-container {
+    display: grid;
+    flex-direction: row;
+    grid-template-columns: auto auto;
+}
+#filters {
+    grid-column: 2;
+}
+#filters1 {
+    grid-row: 1;
+}
+#filters2 {
+    grid-row: 0;
+}
+
+#filters-main {
+grid-column: 2;
+}
+/*#filters1-main {
+grid-row: 1;
+}
+#filters2-main {
+grid-row: 0;
+}*/
+
+/* .flex-container-2 {
+    display: flex;
+    flex-direction: column;
+} */
+
+/*li {*/
+/*margin-bottom: 15px;*/
+/*}*/
+
+a:link {
+    color: #888888;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #888888;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #d1d1d1;
+}
+
+.water {
+    fill: #002fff;
+    fill-opacity: 0.5;
+}
+.bar { 
+    grid-column: 2;
+    fill: white;
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;								
+    padding: 2px;				
+    font: 16px sans-serif;		
+    background: rgb(0, 139, 139);
+    border-radius: 4px;
+    color: black;	
+  }
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+
+.sliders {
+    flex: 1;
+}
+
+#slider-simple text{
+    font-size: 18px;
+    fill: white;
+}
+
+
+/*# sourceMappingURL=/style.e308ff8e.css.map */
