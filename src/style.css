@@ -214,9 +214,12 @@ div.tooltip {
 }
 
 .sliders {
+    align-content: center;
     flex: 1;
+    margin-left: 100px;
 }
-.col-sm-2 {
-    font-size: 30px;
-    color: #d1d1d1;
+
+#slider-simple text{
+    font-size: 18px;
+    fill: white;
 }

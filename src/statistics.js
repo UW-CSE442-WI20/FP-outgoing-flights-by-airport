@@ -1,6 +1,11 @@
 var d3 = require('d3');
 var queryString = require('query-string');
 const parsed = queryString.parse(location.search);
+document.getElementById("origin").innerText = parsed.origin;
+document.getElementById("dest").innerText = parsed.dest;
+
+const csvData = require('../static/months/jan.csv');
+//console.log(parsed);
 //const datePattern = /\.*-(\d{01})-\.*/;
 
 // Graph visualization copied from example found at:
@@ -22,39 +27,6 @@ var svg = d3.select("body").append("svg")
     .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
-"November", "December"];
-var month_select = "January";
-var file = "../static/months/jan.csv";
-
-// var monthSlider = d3
-//   .sliderBottom()
-//   .min(months[0])
-//   .max(months[11])
-//   .width(400)
-//   .tickFormat(d3.format(''))
-//   .ticks(12)
-//   .step(1)
-//   .default("January")
-//   .on('onchange', val => {
-//       month_select = val;
-//       console.log(month_select);
-//       window.updateCSV(month_select)
-//   });
-
-var monthStep = d3
-  .select('div#slider-step')
-  .append('svg')
-  .attr('width', 500)
-  .attr('height', 100)
-  .append('g')
-  .attr('transform', 'translate(30,30)')
-  .attr('fill', 'red')
-  .attr('font-size', '40px');
-
-// monthStep.call(monthSlider);
-
-const csv = require("../static/months/jan.csv");
 
 function updateCSV(month) {
   if (month == "January") {
@@ -86,7 +58,6 @@ function updateCSV(month) {
 
 // Default will be set to january flights, need to change file
 // based on selected month
-const csvData = require('../static/Months/jan.csv');
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
         d.Origin = d.Origin;
@@ -98,7 +69,7 @@ d3.csv(csvData).then(function(data) {
     });
 
   const results = data.filter(function (row) {
-    return (row.Origin == parsed[0].airline)
+    return (row.Origin == parsed.origin && row.Dest == parsed.dest) 
   });
 
     console.log(results);

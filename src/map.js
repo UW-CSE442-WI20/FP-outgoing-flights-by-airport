@@ -105,7 +105,9 @@ function draw_data(data){
 }
 
 const csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
-
+//-----------
+// dropdown list
+//-----------
 d3.csv(csvData).then(function(data) {
     data.forEach(function(d) {
             d.Origin = d.Origin;
@@ -130,27 +132,24 @@ d3.csv(csvData).then(function(data) {
 
       select
       .on("change", function(d) {
-        var address = []//'statistics.html?airline=';
-        address[0] = 'statistics.html?airline=';
-        address[1] = 'statistics.html?frdest='
-       // var fromOrigin = 'statistics.html?frdest=';
-        var AirPort = d3.select(this).property("value");
+        let airport = d3.select(this).property("value");
+        let address = 'statistics.html?origin=';
+        address = address.concat(parsed.airline, '&dest=');
+
         d3.csv(getFile, function(d){
-          if (d.AirPort == AirPort) {
+          if (d.AirPort == airport) {
               return d.AirID;
         }}).then(v => {
-            address[0] = address[0].concat(v);
-            address[1]= address[1].concat(parsed.airline);
-            //console.log(address);
-           // window.location.href = fromOrigin;
-            window.location.href = address[0];
+            address = address.concat(v);
+            if (Array.isArray(v) && v.length) {
+                window.location.href = address;
+            }
         })
-        //
       });
 
 
     select.selectAll("option")
-        .data(types)
+        .data(destinations)
         .enter()
         .append("option")
         .attr("class", "dropdown1")
@@ -158,7 +157,24 @@ d3.csv(csvData).then(function(data) {
         .text(function (d) { return d; });
 });
 
+// --------------------------
+// helper function for dropdown
+// --------------------------
+
+d3.csv(getFile, function(d){
+    return {
+    type : d.AirPort,
+    code : d.AirID
+  };
+  }).then(function(data) {
+    for(var i = 0; i < data.length; i++){
+      var id = data[i].code;
+      ID_Name.set(id, data[i].type);
+    }
+  });
+
 function distinct_Types(rows) {
+  types = [];
   for(var i = 0; i < rows.length; i++) {
     types[i] = ID_Name.get(rows[i]);
   }
@@ -168,14 +184,48 @@ function distinct_Types(rows) {
   return types;
 }
 
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-  return result;
+// --------------------------
+// Drawing Functions Below
+// --------------------------
+function draw_data(data){
+
+    data.forEach(function(d) {
+        destinations.push(d.Dest);
+        data1.push(d);
+
+        L.circle([d.O_lat,d.O_long], {
+            color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 25000,
+            Opacity: 0.2
+        }).addTo(map);
+
+        L.circle([d.D_lat,d.D_long], {
+            color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 30000,
+            Opacity: 0.2
+        }).on({
+            mouseover: onHover,
+            mouseout: offHover,
+            click: onMapClick,
+            dblclick: onMapClick
+        }).addTo(map).bringToFront();
+
+        let pointA = new L.LatLng(d.O_lat, d.O_long);
+        let pointB = new L.LatLng(d.D_lat, d.D_long);
+
+        let latlngs = Array();
+        latlngs.push(pointA);
+        latlngs.push(pointB);
+
+        L.polyline(latlngs, {color: 'blue', weight: 1}).addTo(map);
+    });
+    destinations = distinct_Types(destinations);
 }
+
 
 /*
 Function to draw the airports that are gotten from the airports csv file
@@ -226,8 +276,10 @@ function onHover(l) {
 function offHover(l) {
     info.update();
 }
-// --------------------------
 
+// --------------------------
+// Map Instruction Pane Below
+// --------------------------
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
@@ -264,9 +316,6 @@ info.update = function (props) {
     temp = data1.filter(function (row) {
         return row.D_lat == props.lat && row.D_long == props.lng
     })
-    // console.log(temp);
-    // console.log(temp.Count);
-    // console.log(temp.Origin);
 
     this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
         '<b>' + props.lat + '</b><br />' + props.lng + ' people / mi<sup>2</sup>'
@@ -281,36 +330,28 @@ info.addTo(map);
 const airportID = parsed.airline;
 
 setTimeout(function() {
-    document.getElementById("airportName").innerHTML = "<Selected airport>";
-    d3.csv(getFile).then(function(data) {
-        data.forEach(function(d) {
-            d.Airline = d.Airline
-            d.AirID = d.AirID
-
-            if (d.AirID == airportID) {
-                document.getElementById("airportName").innerHTML = d.AirPort;
-               // console.log(d.AirPort);
-            }
-        });
-    });
+    document.getElementById("airportName").innerHTML = ID_Name.get(airportID);
     tallyData();
 }, 500);
 
 function tallyData() {
     d3.csv(csvData).then(function(data) {
+        // map holds, key: dest airport, value: num of flights to key airport
         const map = new Map();
         let totalCount = 0;
         let totalFlightTime = 0.0;
+
+        // finding all flights where origin is selected airport
         data.forEach(function(d) {
             if(d.Origin === airportID) {
-                // count++;
-                // Is 'count' in the CSV the num of flights?
+                // incrementing total count by the flight count
                 let count = parseInt(d.Count);
                 totalCount += count;
 
+                // incrementing total flight time by the flight time and num of flights
                 totalFlightTime += parseFloat(d.Time) * count;
 
-                // tallying counts for each airport
+                // tallying counts for each dest airport
                 if (map.has(d.Dest)) {
                     let prev = map.get(d.Dest);
                     map.set(d.Dest, prev + count);
@@ -320,6 +361,7 @@ function tallyData() {
             }
         });
 
+        // finding dest airport with most flights from origin
         let airportMaxID = "";
         let airportMaxCount = 0;
         map.forEach(function(value, key, map) {
@@ -328,8 +370,8 @@ function tallyData() {
                 airportMaxCount = value;
             }
         });
-        // console.log(totalFlightTime);
-        // console.log(totalCount);
+
+        // updating values to display on html
         document.getElementById("airportCount").innerText = map.size;
         document.getElementById("airportMost").innerText = airportMaxID;
         document.getElementById("airportMostNum").innerText = airportMaxCount;
