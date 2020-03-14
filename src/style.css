@@ -214,7 +214,9 @@ div.tooltip {
 }
 
 .sliders {
+    align-content: center;
     flex: 1;
+    margin-left: 100px;
 }
 
 #slider-simple text{

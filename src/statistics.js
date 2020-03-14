@@ -5,7 +5,7 @@ document.getElementById("origin").innerText = parsed.origin;
 document.getElementById("dest").innerText = parsed.dest;
 
 const csvData = require('../static/months/jan.csv');
-console.log(parsed);
+//console.log(parsed);
 //const datePattern = /\.*-(\d{01})-\.*/;
 
 // Graph visualization copied from example found at:
