@@ -19,8 +19,6 @@ Names:  Anika Padwekar
   <script src="https://d3js.org/d3.v5.js"></script>
   <script src="https://unpkg.com/d3-simple-slider"></script>
   <link rel="stylesheet" href="style.css">
-  <!--<script src="https://unpkg.com/topojson-client@3"></script>
-  <script src="https://unpkg.com/d3-simple-slider"></script>-->
   
 </head>
 <body>
@@ -31,14 +29,16 @@ Names:  Anika Padwekar
 </div>
 
 <div id="grid-container">
-  <h1>Number of Flights (Daily)</h1>
-  
-  <div class="sliders">
-    <div class="col-sm-2"><p id="value-simple"></p></div>
-  </div>
-  
+  <h1>Number of Flights (Daily)</h1>  
   <script src="./statistics.js"></script>
 </div>
+
+<div class="row align-items-center">
+  <div class="col-sm-2"><p id="value-step"></p></div>
+  <div class="col-sm-12"><div id="slider-simple"></div></div>
+</div>
+<script src="./slider.js"></script>
+
 
 <footer>
   Copyright &copy; 2020 by Anika Padwekar, Khai Tran, Kwing Li, McKinnon Williams, Nicole Garakanidze, All rights reserved.

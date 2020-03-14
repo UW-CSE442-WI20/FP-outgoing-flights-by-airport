@@ -28940,8 +28940,8 @@ d3.csv(getFile, function (d) {
         return d.AirID;
       }
     }).then(function (v) {
-      address = address.concat(v);
-      console.log(address);
+      address = address.concat(v); //console.log(address);
+
       window.location.href = address;
     }); //
   });
@@ -29038,7 +29038,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52350" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50786" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
