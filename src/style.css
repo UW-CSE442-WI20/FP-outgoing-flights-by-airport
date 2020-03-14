@@ -216,7 +216,8 @@ div.tooltip {
 .sliders {
     flex: 1;
 }
-.col-sm-2 {
-    font-size: 30px;
-    color: #d1d1d1;
+
+#slider-simple text{
+    font-size: 18px;
+    fill: white;
 }

@@ -28884,13 +28884,521 @@ Object.keys(_d3Zoom).forEach(function (key) {
     }
   });
 });
-},{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"../static/jan.csv":[function(require,module,exports) {
-module.exports = "/jan.1f71de0f.csv";
+},{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"../node_modules/strict-uri-encode/index.js":[function(require,module,exports) {
+'use strict';
+
+module.exports = str => encodeURIComponent(str).replace(/[!'()*]/g, x => "%".concat(x.charCodeAt(0).toString(16).toUpperCase()));
+},{}],"../node_modules/decode-uri-component/index.js":[function(require,module,exports) {
+'use strict';
+
+var token = '%[a-f0-9]{2}';
+var singleMatcher = new RegExp(token, 'gi');
+var multiMatcher = new RegExp('(' + token + ')+', 'gi');
+
+function decodeComponents(components, split) {
+  try {
+    // Try to decode the entire string first
+    return decodeURIComponent(components.join(''));
+  } catch (err) {// Do nothing
+  }
+
+  if (components.length === 1) {
+    return components;
+  }
+
+  split = split || 1; // Split the array in 2 parts
+
+  var left = components.slice(0, split);
+  var right = components.slice(split);
+  return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
+}
+
+function decode(input) {
+  try {
+    return decodeURIComponent(input);
+  } catch (err) {
+    var tokens = input.match(singleMatcher);
+
+    for (var i = 1; i < tokens.length; i++) {
+      input = decodeComponents(tokens, i).join('');
+      tokens = input.match(singleMatcher);
+    }
+
+    return input;
+  }
+}
+
+function customDecodeURIComponent(input) {
+  // Keep track of all the replacements and prefill the map with the `BOM`
+  var replaceMap = {
+    '%FE%FF': '\uFFFD\uFFFD',
+    '%FF%FE': '\uFFFD\uFFFD'
+  };
+  var match = multiMatcher.exec(input);
+
+  while (match) {
+    try {
+      // Decode as big chunks as possible
+      replaceMap[match[0]] = decodeURIComponent(match[0]);
+    } catch (err) {
+      var result = decode(match[0]);
+
+      if (result !== match[0]) {
+        replaceMap[match[0]] = result;
+      }
+    }
+
+    match = multiMatcher.exec(input);
+  } // Add `%C2` at the end of the map to make sure it does not replace the combinator before everything else
+
+
+  replaceMap['%C2'] = '\uFFFD';
+  var entries = Object.keys(replaceMap);
+
+  for (var i = 0; i < entries.length; i++) {
+    // Replace all decoded components
+    var key = entries[i];
+    input = input.replace(new RegExp(key, 'g'), replaceMap[key]);
+  }
+
+  return input;
+}
+
+module.exports = function (encodedURI) {
+  if (typeof encodedURI !== 'string') {
+    throw new TypeError('Expected `encodedURI` to be of type `string`, got `' + typeof encodedURI + '`');
+  }
+
+  try {
+    encodedURI = encodedURI.replace(/\+/g, ' '); // Try the built in decoder first
+
+    return decodeURIComponent(encodedURI);
+  } catch (err) {
+    // Fallback to a more advanced decoder
+    return customDecodeURIComponent(encodedURI);
+  }
+};
+},{}],"../node_modules/split-on-first/index.js":[function(require,module,exports) {
+'use strict';
+
+module.exports = function (string, separator) {
+  if (!(typeof string === 'string' && typeof separator === 'string')) {
+    throw new TypeError('Expected the arguments to be of type `string`');
+  }
+
+  if (separator === '') {
+    return [string];
+  }
+
+  var separatorIndex = string.indexOf(separator);
+
+  if (separatorIndex === -1) {
+    return [string];
+  }
+
+  return [string.slice(0, separatorIndex), string.slice(separatorIndex + separator.length)];
+};
+},{}],"../node_modules/query-string/index.js":[function(require,module,exports) {
+'use strict';
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function (obj) { return typeof obj; }; } else { _typeof = function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+var strictUriEncode = require('strict-uri-encode');
+
+var decodeComponent = require('decode-uri-component');
+
+var splitOnFirst = require('split-on-first');
+
+function encoderForArrayFormat(options) {
+  switch (options.arrayFormat) {
+    case 'index':
+      return function (key) {
+        return function (result, value) {
+          var index = result.length;
+
+          if (value === undefined || options.skipNull && value === null) {
+            return result;
+          }
+
+          if (value === null) {
+            return [].concat(_toConsumableArray(result), [[encode(key, options), '[', index, ']'].join('')]);
+          }
+
+          return [].concat(_toConsumableArray(result), [[encode(key, options), '[', encode(index, options), ']=', encode(value, options)].join('')]);
+        };
+      };
+
+    case 'bracket':
+      return function (key) {
+        return function (result, value) {
+          if (value === undefined || options.skipNull && value === null) {
+            return result;
+          }
+
+          if (value === null) {
+            return [].concat(_toConsumableArray(result), [[encode(key, options), '[]'].join('')]);
+          }
+
+          return [].concat(_toConsumableArray(result), [[encode(key, options), '[]=', encode(value, options)].join('')]);
+        };
+      };
+
+    case 'comma':
+    case 'separator':
+      return function (key) {
+        return function (result, value) {
+          if (value === null || value === undefined || value.length === 0) {
+            return result;
+          }
+
+          if (result.length === 0) {
+            return [[encode(key, options), '=', encode(value, options)].join('')];
+          }
+
+          return [[result, encode(value, options)].join(options.arrayFormatSeparator)];
+        };
+      };
+
+    default:
+      return function (key) {
+        return function (result, value) {
+          if (value === undefined || options.skipNull && value === null) {
+            return result;
+          }
+
+          if (value === null) {
+            return [].concat(_toConsumableArray(result), [encode(key, options)]);
+          }
+
+          return [].concat(_toConsumableArray(result), [[encode(key, options), '=', encode(value, options)].join('')]);
+        };
+      };
+  }
+}
+
+function parserForArrayFormat(options) {
+  var result;
+
+  switch (options.arrayFormat) {
+    case 'index':
+      return function (key, value, accumulator) {
+        result = /\[(\d*)\]$/.exec(key);
+        key = key.replace(/\[\d*\]$/, '');
+
+        if (!result) {
+          accumulator[key] = value;
+          return;
+        }
+
+        if (accumulator[key] === undefined) {
+          accumulator[key] = {};
+        }
+
+        accumulator[key][result[1]] = value;
+      };
+
+    case 'bracket':
+      return function (key, value, accumulator) {
+        result = /(\[\])$/.exec(key);
+        key = key.replace(/\[\]$/, '');
+
+        if (!result) {
+          accumulator[key] = value;
+          return;
+        }
+
+        if (accumulator[key] === undefined) {
+          accumulator[key] = [value];
+          return;
+        }
+
+        accumulator[key] = [].concat(accumulator[key], value);
+      };
+
+    case 'comma':
+    case 'separator':
+      return function (key, value, accumulator) {
+        var isArray = typeof value === 'string' && value.split('').indexOf(options.arrayFormatSeparator) > -1;
+        var newValue = isArray ? value.split(options.arrayFormatSeparator).map(function (item) {
+          return decode(item, options);
+        }) : value === null ? value : decode(value, options);
+        accumulator[key] = newValue;
+      };
+
+    default:
+      return function (key, value, accumulator) {
+        if (accumulator[key] === undefined) {
+          accumulator[key] = value;
+          return;
+        }
+
+        accumulator[key] = [].concat(accumulator[key], value);
+      };
+  }
+}
+
+function validateArrayFormatSeparator(value) {
+  if (typeof value !== 'string' || value.length !== 1) {
+    throw new TypeError('arrayFormatSeparator must be single character string');
+  }
+}
+
+function encode(value, options) {
+  if (options.encode) {
+    return options.strict ? strictUriEncode(value) : encodeURIComponent(value);
+  }
+
+  return value;
+}
+
+function decode(value, options) {
+  if (options.decode) {
+    return decodeComponent(value);
+  }
+
+  return value;
+}
+
+function keysSorter(input) {
+  if (Array.isArray(input)) {
+    return input.sort();
+  }
+
+  if (_typeof(input) === 'object') {
+    return keysSorter(Object.keys(input)).sort(function (a, b) {
+      return Number(a) - Number(b);
+    }).map(function (key) {
+      return input[key];
+    });
+  }
+
+  return input;
+}
+
+function removeHash(input) {
+  var hashStart = input.indexOf('#');
+
+  if (hashStart !== -1) {
+    input = input.slice(0, hashStart);
+  }
+
+  return input;
+}
+
+function getHash(url) {
+  var hash = '';
+  var hashStart = url.indexOf('#');
+
+  if (hashStart !== -1) {
+    hash = url.slice(hashStart);
+  }
+
+  return hash;
+}
+
+function extract(input) {
+  input = removeHash(input);
+  var queryStart = input.indexOf('?');
+
+  if (queryStart === -1) {
+    return '';
+  }
+
+  return input.slice(queryStart + 1);
+}
+
+function parseValue(value, options) {
+  if (options.parseNumbers && !Number.isNaN(Number(value)) && typeof value === 'string' && value.trim() !== '') {
+    value = Number(value);
+  } else if (options.parseBooleans && value !== null && (value.toLowerCase() === 'true' || value.toLowerCase() === 'false')) {
+    value = value.toLowerCase() === 'true';
+  }
+
+  return value;
+}
+
+function parse(input, options) {
+  options = Object.assign({
+    decode: true,
+    sort: true,
+    arrayFormat: 'none',
+    arrayFormatSeparator: ',',
+    parseNumbers: false,
+    parseBooleans: false
+  }, options);
+  validateArrayFormatSeparator(options.arrayFormatSeparator);
+  var formatter = parserForArrayFormat(options); // Create an object with no prototype
+
+  var ret = Object.create(null);
+
+  if (typeof input !== 'string') {
+    return ret;
+  }
+
+  input = input.trim().replace(/^[?#&]/, '');
+
+  if (!input) {
+    return ret;
+  }
+
+  for (var param of input.split('&')) {
+    var [key, value] = splitOnFirst(options.decode ? param.replace(/\+/g, ' ') : param, '='); // Missing `=` should be `null`:
+    // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+
+    value = value === undefined ? null : options.arrayFormat === 'comma' ? value : decode(value, options);
+    formatter(decode(key, options), value, ret);
+  }
+
+  for (var _key of Object.keys(ret)) {
+    var _value = ret[_key];
+
+    if (_typeof(_value) === 'object' && _value !== null) {
+      for (var k of Object.keys(_value)) {
+        _value[k] = parseValue(_value[k], options);
+      }
+    } else {
+      ret[_key] = parseValue(_value, options);
+    }
+  }
+
+  if (options.sort === false) {
+    return ret;
+  }
+
+  return (options.sort === true ? Object.keys(ret).sort() : Object.keys(ret).sort(options.sort)).reduce(function (result, key) {
+    var value = ret[key];
+
+    if (Boolean(value) && _typeof(value) === 'object' && !Array.isArray(value)) {
+      // Sort object keys, not values
+      result[key] = keysSorter(value);
+    } else {
+      result[key] = value;
+    }
+
+    return result;
+  }, Object.create(null));
+}
+
+exports.extract = extract;
+exports.parse = parse;
+
+exports.stringify = function (object, options) {
+  if (!object) {
+    return '';
+  }
+
+  options = Object.assign({
+    encode: true,
+    strict: true,
+    arrayFormat: 'none',
+    arrayFormatSeparator: ','
+  }, options);
+  validateArrayFormatSeparator(options.arrayFormatSeparator);
+  var formatter = encoderForArrayFormat(options);
+  var objectCopy = Object.assign({}, object);
+
+  if (options.skipNull) {
+    for (var key of Object.keys(objectCopy)) {
+      if (objectCopy[key] === undefined || objectCopy[key] === null) {
+        delete objectCopy[key];
+      }
+    }
+  }
+
+  var keys = Object.keys(objectCopy);
+
+  if (options.sort !== false) {
+    keys.sort(options.sort);
+  }
+
+  return keys.map(function (key) {
+    var value = object[key];
+
+    if (value === undefined) {
+      return '';
+    }
+
+    if (value === null) {
+      return encode(key, options);
+    }
+
+    if (Array.isArray(value)) {
+      return value.reduce(formatter(key), []).join('&');
+    }
+
+    return encode(key, options) + '=' + encode(value, options);
+  }).filter(function (x) {
+    return x.length > 0;
+  }).join('&');
+};
+
+exports.parseUrl = function (input, options) {
+  return {
+    url: removeHash(input).split('?')[0] || '',
+    query: parse(extract(input), options)
+  };
+};
+
+exports.stringifyUrl = function (input, options) {
+  var url = removeHash(input.url).split('?')[0] || '';
+  var queryFromUrl = exports.extract(input.url);
+  var parsedQueryFromUrl = exports.parse(queryFromUrl);
+  var hash = getHash(input.url);
+  var query = Object.assign(parsedQueryFromUrl, input.query);
+  var queryString = exports.stringify(query, options);
+
+  if (queryString) {
+    queryString = "?".concat(queryString);
+  }
+
+  return "".concat(url).concat(queryString).concat(hash);
+};
+},{"strict-uri-encode":"../node_modules/strict-uri-encode/index.js","decode-uri-component":"../node_modules/decode-uri-component/index.js","split-on-first":"../node_modules/split-on-first/index.js"}],"../static/months/jan.csv":[function(require,module,exports) {
+module.exports = "/jan.4dcc9c0a.csv";
+},{}],"../static/months/feb.csv":[function(require,module,exports) {
+module.exports = "/feb.8a59d726.csv";
+},{}],"../static/months/march.csv":[function(require,module,exports) {
+module.exports = "/march.c800627c.csv";
+},{}],"../static/months/april.csv":[function(require,module,exports) {
+module.exports = "/april.bc9c96cc.csv";
+},{}],"../static/months/may.csv":[function(require,module,exports) {
+module.exports = "/may.7ef36132.csv";
+},{}],"../static/months/june.csv":[function(require,module,exports) {
+module.exports = "/june.175dda0b.csv";
+},{}],"../static/months/july.csv":[function(require,module,exports) {
+module.exports = "/july.feb7463b.csv";
+},{}],"../static/months/august.csv":[function(require,module,exports) {
+module.exports = "/august.803d5c6d.csv";
+},{}],"../static/months/sept.csv":[function(require,module,exports) {
+module.exports = "/sept.de975c5f.csv";
+},{}],"../static/months/oct.csv":[function(require,module,exports) {
+module.exports = "/oct.f78d87e1.csv";
+},{}],"../static/months/nov.csv":[function(require,module,exports) {
+module.exports = "/nov.ca95b039.csv";
+},{}],"../static/months/dec.csv":[function(require,module,exports) {
+module.exports = "/dec.b6410f83.csv";
 },{}],"statistics.js":[function(require,module,exports) {
-var d3 = require('d3'); //const datePattern = /\.*-(\d{01})-\.*/;
+function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
+
+var d3 = require('d3');
+
+var queryString = require('query-string');
+
+var parsed = queryString.parse(location.search);
+
+var csvData = require('../static/months/jan.csv');
+
+console.log(parsed); //const datePattern = /\.*-(\d{01})-\.*/;
 // Graph visualization copied from example found at:
 // https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
-
 
 var margin = {
   top: 20,
@@ -28902,10 +29410,37 @@ var margin = {
     height = 500 - margin.top - margin.bottom;
 var x = d3.scaleBand().range([0, width]).padding(0.1);
 var y = d3.scaleLinear().range([height, 0]);
-var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Default will be set to january flights, need to change file
+var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+function updateCSV(month) {
+  if (month == "January") {
+    csvData = (_readOnlyError("csvData"), require("../static/months/jan.csv"));
+  } else if (month == "February") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/feb.csv'));
+  } else if (month == "March") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/march.csv'));
+  } else if (month == "April") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/april.csv'));
+  } else if (month == "May") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/may.csv'));
+  } else if (month == "June") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/june.csv'));
+  } else if (month == "July") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/july.csv'));
+  } else if (month == "August") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/august.csv'));
+  } else if (month == "September") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/sept.csv'));
+  } else if (month == "October") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/oct.csv'));
+  } else if (month == "November") {
+    csvData = (_readOnlyError("csvData"), require('../static/months/nov.csv'));
+  } else {
+    csvData = (_readOnlyError("csvData"), require('../static/months/dec.csv'));
+  }
+} // Default will be set to january flights, need to change file
 // based on selected month
 
-var csvData = require('../static/jan.csv');
 
 d3.csv(csvData).then(function (data) {
   data.forEach(function (d) {
@@ -28917,7 +29452,7 @@ d3.csv(csvData).then(function (data) {
     d.Count = +d.Count;
   });
   var results = data.filter(function (row) {
-    return row.Origin == 'SEA' && row.Dest == 'ORD'; // Need to change ariports based on selection
+    return row.Origin == parsed.airline; // return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
   });
   console.log(results);
   x.domain(results.map(function (d) {
@@ -28943,7 +29478,7 @@ d3.csv(csvData).then(function (data) {
 var div = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0); // mouse handle the 
 
 function handleMouseOver(d, i) {
-  toolTipMap("Name of Airport level ".concat(d.Count, " in date: ").concat(d.Date)); // Use D3 to select element, change color and size
+  toolTipMap("There are ".concat(d.Count, " flights in date: ").concat(d.Date)); // Use D3 to select element, change color and size
 
   d3.select(this).style("opacity", .7);
 }
@@ -28960,7 +29495,7 @@ function toolTipMap(d) {
   div.transition().duration(150).style("opacity", .9);
   div.html(d).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
 }
-},{"d3":"../node_modules/d3/index.js","../static/jan.csv":"../static/jan.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/months/jan.csv":"../static/months/jan.csv","../static/months/feb.csv":"../static/months/feb.csv","../static/months/march.csv":"../static/months/march.csv","../static/months/april.csv":"../static/months/april.csv","../static/months/may.csv":"../static/months/may.csv","../static/months/june.csv":"../static/months/june.csv","../static/months/july.csv":"../static/months/july.csv","../static/months/august.csv":"../static/months/august.csv","../static/months/sept.csv":"../static/months/sept.csv","../static/months/oct.csv":"../static/months/oct.csv","../static/months/nov.csv":"../static/months/nov.csv","../static/months/dec.csv":"../static/months/dec.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -28988,7 +29523,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52350" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50786" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

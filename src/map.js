@@ -81,17 +81,19 @@ d3.csv(csvData).then(function(data) {
 
       select
       .on("change", function(d) {
-        var address = 'statistics.html?airline=';
-        var AirPort = d3.select(this).property("value");
+        let airport = d3.select(this).property("value");
+        let address = 'statistics.html?origin=';
+        address = address.concat(parsed.airline, '&dest=');
+
         d3.csv(getFile, function(d){
-          if (d.AirPort == AirPort) {
+          if (d.AirPort == airport) {
               return d.AirID;
         }}).then(v => {
             address = address.concat(v);
-            //console.log(address);
-            window.location.href = address;
+            if (Array.isArray(v) && v.length) {
+                window.location.href = address;
+            }
         })
-        //
       });
 
 

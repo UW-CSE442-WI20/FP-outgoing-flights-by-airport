@@ -29363,10 +29363,10 @@ exports.stringifyUrl = function (input, options) {
 };
 },{"strict-uri-encode":"../node_modules/strict-uri-encode/index.js","decode-uri-component":"../node_modules/decode-uri-component/index.js","split-on-first":"../node_modules/split-on-first/index.js"}],"../static/airport_names.csv":[function(require,module,exports) {
 module.exports = "/airport_names.22511235.csv";
-},{}],"../static/2018_grouped_no_dates_with_cords.csv":[function(require,module,exports) {
-module.exports = "/2018_grouped_no_dates_with_cords.96f062a8.csv";
 },{}],"../static/new_temp.csv":[function(require,module,exports) {
 module.exports = "/new_temp.3dc906ff.csv";
+},{}],"../static/2018_grouped_no_dates_with_cords.csv":[function(require,module,exports) {
+module.exports = "/2018_grouped_no_dates_with_cords.96f062a8.csv";
 },{}],"map.js":[function(require,module,exports) {
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -29393,12 +29393,15 @@ var queryString = require('query-string');
 
 var parsed = queryString.parse(location.search);
 
-var getFile = require('../static/airport_names.csv');
+var getFile = require('../static/airport_names.csv'); //console.log(parsed.airline);
 
-console.log(parsed.airline);
 /* Destination airports */
 
+
 var destinations = Array();
+/*                      */
+
+var data1 = Array();
 /* Sorted destination airports */
 
 var types = [];
@@ -29411,6 +29414,159 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   minZoom: 2 // Prevent ths duplicated display of countries on zoom
 
 }).addTo(map);
+/*
+Load in all the airports as circles so we can click
+on them and be able to change the display interactively
+*/
+
+var airPorts = require('../static/new_temp.csv');
+
+d3.csv(airPorts).then(function (data) {
+  data.forEach(function (d) {
+    d.Airline = d.Airline;
+    d.AirID = d.AirID;
+    d.X = +d.X;
+    d.Y = +d.Y;
+  });
+  draw_airports(data);
+});
+
+var csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
+
+d3.csv(csvData).then(function (data) {
+  data.forEach(function (d) {
+    d.Origin = d.Origin;
+    d.Dest = d.Dest;
+    d.Time = +d.Time;
+    d.Distance = +d.Distance;
+    d.Count = +d.Count;
+    d.O_lat = +d.O_lat;
+    d.O_long = +d.O_long;
+    d.D_lat = +d.D_lat;
+    d.D_long = +d.D_long;
+  });
+  draw_data(data.filter(function (row) {
+    return row.Origin == parsed.airline;
+  }));
+  var select = d3.select(".dropdown1").append("div").append("select");
+  select.on("change", function (d) {
+    var airport = d3.select(this).property("value");
+    var address = 'statistics.html?origin=';
+    address = address.concat(parsed.airline, '&dest=');
+    d3.csv(getFile, function (d) {
+      if (d.AirPort == airport) {
+        return d.AirID;
+      }
+    }).then(function (v) {
+      address = address.concat(v);
+
+      if (Array.isArray(v) && v.length) {
+        window.location.href = address;
+      }
+    });
+  });
+  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown1").attr("value", function (d) {
+    return d;
+  }).text(function (d) {
+    return toProperCase(d);
+  });
+});
+d3.csv(getFile, function (d) {
+  return {
+    type: d.AirPort,
+    code: d.AirID
+  };
+}).then(function (data) {
+  for (var i = 0; i < data.length; i++) {
+    var id = data[i].code;
+    ID_Name.set(id, data[i].type);
+  }
+});
+
+function distinct_Types(rows) {
+  for (var i = 0; i < rows.length; i++) {
+    types[i] = ID_Name.get(rows[i]);
+  }
+
+  types = _toConsumableArray(new Set(types)).sort();
+  types.unshift("Please Select an AirPort"); //console.log(types)
+
+  return types;
+}
+
+function toProperCase(value) {
+  var words = value.split(" ");
+  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
+
+  for (var i = 1; i < words.length; i++) {
+    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
+  }
+
+  return result;
+}
+
+function draw_data(data) {
+  data.forEach(function (d) {
+    destinations.push(d.Dest);
+    data1.push(d);
+    L.circle([d.O_lat, d.O_long], {
+      color: "red",
+      fillColor: "#f03",
+      fillOpacity: 0.5,
+      radius: 25000,
+      Opacity: 0.2
+    }).addTo(map);
+    L.circle([d.D_lat, d.D_long], {
+      color: "red",
+      fillColor: "#f03",
+      fillOpacity: 0.5,
+      radius: 30000,
+      Opacity: 0.2
+    }).on({
+      mouseover: onHover,
+      mouseout: offHover,
+      click: onMapClick,
+      dblclick: onMapClick
+    }).addTo(map).bringToFront();
+    var pointA = new L.LatLng(d.O_lat, d.O_long);
+    var pointB = new L.LatLng(d.D_lat, d.D_long);
+    var latlngs = Array();
+    latlngs.push(pointA);
+    latlngs.push(pointB);
+    L.polyline(latlngs, {
+      color: 'blue',
+      weight: 1
+    }).addTo(map);
+  });
+  destinations = distinct_Types(destinations);
+}
+/*
+Function to draw the airports that are gotten from the airports csv file
+*/
+
+
+function draw_airports(data) {
+  data.forEach(function (d) {
+    L.circle([d.X, d.Y], {
+      fillOpacity: 0,
+      opacity: 1,
+      radius: 25000
+    }).on({
+      click: onMapClick,
+      dblclick: onMapClick
+    }).addTo(map);
+    L.circle([d.X, d.Y], {
+      color: "blue",
+      fillColor: "#f03",
+      fillOpacity: 0.1,
+      radius: 1000,
+      weight: 1
+    }).on('dblclick', onMapClick).addTo(map);
+  });
+} // --------------------------
+// Map Interactions Below
+// --------------------------
+
 
 function onMapClick(l) {
   d3.csv(airPorts).then(function (data) {
@@ -29433,128 +29589,23 @@ function onHover(l) {
 
 function offHover(l) {
   info.update();
-}
+} // --------------------------
 
-var csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
 
-d3.csv(csvData).then(function (data) {
-  data.forEach(function (d) {
-    d.Origin = d.Origin;
-    d.Dest = d.Dest;
-    d.Time = +d.Time;
-    d.Distance = +d.Distance;
-    d.Count = +d.Count;
-    d.O_lat = +d.O_lat;
-    d.O_long = +d.O_long;
-    d.D_lat = +d.D_lat;
-    d.D_long = +d.D_long;
-  });
-  draw_data(data.filter(function (row) {
-    return row.Origin == parsed.airline;
-  }));
-  var select = d3.select(".dropdown2").append("div").append("select");
-  select.on("change", function (d) {// var address = 'main.html?airline=';
-    // var AirPort = d3.select(this).property("value");
-    // d3.csv(getFile, function(d){
-    //   if (d.AirPort == AirPort) {
-    //       return d.AirID;
-    // }}).then(v => {
-    //     address = address.concat(v);
-    //     console.log(address);
-    //     window.location.href = address;
-    // })
-  });
-  select.selectAll("option").data(types).enter().append("option").attr("class", "dropdown2").attr("value", function (d) {
-    return d;
-  }).text(function (d) {
-    return toProperCase(d);
-  });
+var legend = L.control({
+  position: 'bottomright'
 });
 
-function draw_data(data) {
-  console.log(data);
-  data.forEach(function (d) {
-    destinations.push(d.Dest);
-    L.circle([d.O_lat, d.O_long], {
-      color: "red",
-      fillColor: "#f03",
-      fillOpacity: 0.5,
-      radius: 50000,
-      Opacity: 0.2
-    }).addTo(map);
-    L.circle([d.D_lat, d.D_long], {
-      color: "blue",
-      fillColor: "#f03",
-      fillOpacity: 0.1,
-      radius: 10000,
-      weight: 1
-    }).on({
-      mouseover: onHover,
-      mouseout: offHover
-    });
-    var pointA = new L.LatLng(d.O_lat, d.O_long);
-    var pointB = new L.LatLng(d.D_lat, d.D_long);
-    var pointList = [pointA, pointB];
-    var latlngs = Array();
-    latlngs.push(pointA);
-    latlngs.push(pointB);
-    var polyline = L.polyline(latlngs, {
-      color: 'blue',
-      weight: 1
-    }).addTo(map);
-  });
-  destinations = distinct_Types(destinations);
-}
-/*
- Function to draw the airports that are gotten from the airports csv file
- */
+legend.onAdd = function (map) {
+  var div = L.DomUtil.create('div', 'info legend'); // loop through our density intervals and generate a label with a colored square for each interval
 
+  div.innerHTML += '<p>Click or double click <br> on an airport to change the <br> departure city to that one</p>';
+  return div;
+};
 
-function draw_airports(data) {
-  console.log(data);
-  data.forEach(function (d) {
-    L.circle([d.X, d.Y], {
-      color: "blue",
-      fillColor: "#f03",
-      fillOpacity: 0,
-      opacity: 0,
-      radius: 50000,
-      weight: 1
-    }).on({
-      click: onMapClick,
-      dblclick: onMapClick,
-      mouseover: onHover,
-      mouseout: offHover
-    }).addTo(map);
-    L.circle([d.X, d.Y], {
-      color: "blue",
-      fillColor: "#f03",
-      fillOpacity: 0.1,
-      radius: 1000,
-      weight: 1
-    }).on('dblclick', onMapClick).addTo(map);
-  });
-}
-/* 
- Load in all the airports as circles so we can click
-on them and be able to change the display interactively
- */
-
-
-var airPorts = require('../static/new_temp.csv');
-
-d3.csv(airPorts).then(function (data) {
-  data.forEach(function (d) {
-    d.Airline = d.Airline;
-    d.AirID = d.AirID;
-    d.X = +d.X;
-    d.Y = +d.Y;
-  });
-  draw_airports(data);
-});
-/* 
- Working on a place to display the hover information
- */
+legend.addTo(map); // --------------------------
+// Hover Piece Below
+// --------------------------
 
 var info = L.control();
 
@@ -29567,64 +29618,39 @@ info.onAdd = function (map) {
 
 
 info.update = function (props) {
-  this._div.innerHTML = '<h4>Flight Info</h4>' + (props ? '<b>' + "adsada" + '</b><br />' + "damsd" + ' people / mi<sup>2</sup>' : 'Hover over a destination');
+  if (props == null) {
+    this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination';
+    return;
+  }
+
+  temp = data1.filter(function (row) {
+    return row.D_lat == props.lat && row.D_long == props.lng;
+  });
+  console.log(temp);
+  console.log(temp.Count);
+  console.log(temp.Origin);
+  this._div.innerHTML = '<h4>Flight Info</h4>' + (props ? '<b>' + props.lat + '</b><br />' + props.lng + ' people / mi<sup>2</sup>' : 'Hover over a destination');
 };
 
-info.addTo(map);
-d3.csv(getFile, function (d) {
-  return {
-    type: d.AirPort,
-    code: d.AirID
-  };
-}).then(function (data) {
-  for (var i = 0; i < data.length; i++) {
-    var id = data[i].code;
-    ID_Name.set(id, data[i].type);
-  }
-});
-
-function distinct_Types(rows) {
-  for (var i = 0; i < rows.length; i++) {
-    types[i] = ID_Name.get(rows[i]);
-  }
-
-  types = _toConsumableArray(new Set(types)).sort();
-  types.unshift("Please Select an AirPort");
-  console.log(types);
-  return types;
-}
-
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-
-  return result;
-} // --------------------------
+info.addTo(map); // --------------------------
 // DISPLAY SUMMARY INFO BELOW
 // --------------------------
 
-
 var airportID = parsed.airline;
 setTimeout(function () {
-  document.getElementById("airportName").innerHTML = airportID;
-  tallyData();
-}, 500);
-
-function findAirportByID(id) {
-  var airport = "";
+  document.getElementById("airportName").innerHTML = "<Selected airport>";
   d3.csv(getFile).then(function (data) {
     data.forEach(function (d) {
-      if (d.AirID === id) {
-        return d.AirPort;
+      d.Airline = d.Airline;
+      d.AirID = d.AirID;
+
+      if (d.AirID == airportID) {
+        document.getElementById("airportName").innerHTML = d.AirPort; // console.log(d.AirPort);
       }
     });
   });
-  return airport;
-}
+  tallyData();
+}, 500);
 
 function tallyData() {
   d3.csv(csvData).then(function (data) {
@@ -29651,7 +29677,7 @@ function tallyData() {
     var airportMaxCount = 0;
     map.forEach(function (value, key, map) {
       if (value > airportMaxCount) {
-        airportMaxID = key;
+        airportMaxID = ID_Name.get(key);
         airportMaxCount = value;
       }
     });
@@ -29663,8 +29689,8 @@ function tallyData() {
     document.getElementById("numFlights").innerText = totalCount;
     document.getElementById("avgFlightTime").innerText = (totalFlightTime / totalCount).toFixed(2);
   });
-} // --------------------------
-},{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/airport_names.csv":"../static/airport_names.csv","../static/2018_grouped_no_dates_with_cords.csv":"../static/2018_grouped_no_dates_with_cords.csv","../static/new_temp.csv":"../static/new_temp.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+}
+},{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/airport_names.csv":"../static/airport_names.csv","../static/new_temp.csv":"../static/new_temp.csv","../static/2018_grouped_no_dates_with_cords.csv":"../static/2018_grouped_no_dates_with_cords.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29692,7 +29718,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52350" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50786" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

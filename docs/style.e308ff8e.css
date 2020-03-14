@@ -186,7 +186,10 @@ a:hover {
     fill: #002fff;
     fill-opacity: 0.5;
 }
-.bar { fill: white; }
+.bar { 
+    grid-column: 2;
+    fill: white;
+}
 
 div.tooltip {	
     position: absolute;			
@@ -208,6 +211,15 @@ div.tooltip {
 .info h4 {
     margin: 0 0 5px;
     color: #777;
+}
+
+.sliders {
+    flex: 1;
+}
+
+#slider-simple text{
+    font-size: 18px;
+    fill: white;
 }
 
 
