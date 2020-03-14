@@ -161,9 +161,9 @@ function draw_data(data){
         L.circle([d.D_lat,d.D_long], {
             color: "red",
             fillColor: "#f03",
-            fillOpacity: 0.5,
+            fillOpacity: 0,
             radius: 30000,
-            Opacity: 0.2
+            opacity: 0.2
         }).on({
             mouseover: onHover,
             mouseout: offHover,
@@ -192,7 +192,7 @@ function draw_airports(data){
     data.forEach(function(d) {
         L.circle([d.X,d.Y], {
             fillOpacity: 0,
-            opacity: 1,
+            opacity: 0,
             radius: 25000
         }).on({
             click: onMapClick,
@@ -202,7 +202,7 @@ function draw_airports(data){
         L.circle([d.X,d.Y], {
             color: "blue",
             fillColor: "#f03",
-            fillOpacity: 0.1,
+            fillOpacity: 0,
             radius: 1000,
             weight: 1
         }).on('dblclick', onMapClick).addTo(map);
