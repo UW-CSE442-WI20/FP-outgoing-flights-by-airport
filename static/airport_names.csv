@@ -1,7 +1,16 @@
 AirPort,AirID
+Pago Pago International Airport,PPG
+Saipan International Airport,SPN
+Antonio B. Won Pat International Airport,GUM
+Cyril E. King Airport,STT
+Henry E Rohlsen Airport,STX
+Rafael Hernandez Airport,BQN
+Mercedita Airport,PSE
+Luis Munoz Marin International Airport,SJU
 Hilo International Airport,ITO
 Fort Smith Regional Airport,FSM
 Grand Forks International Airport,GFK
+Ernest A. Love Field,PRC
 Trenton Mercer Airport,TTN
 General Edward Lawrence Logan International Airport,BOS
 Metropolitan Oakland International Airport,OAK
@@ -10,6 +19,7 @@ Kahului Airport,OGG
 Wichita Eisenhower National Airport,ICT
 Kansas City International Airport,MCI
 Dane County Regional Truax Field,MSN
+Dillingham Airport,DLG
 Phoenix Sky Harbor International Airport,PHX
 Bangor International Airport,BGR
 East Texas Regional Airport,GGG
@@ -20,6 +30,7 @@ Memphis International Airport,MEM
 Los Angeles International Airport,LAX
 Cleveland Hopkins International Airport,CLE
 Cincinnati Northern Kentucky International Airport,CVG
+Juneau International Airport,JNU
 Lafayette Regional Airport,LFT
 Newark Liberty International Airport,EWR
 Boise Air Terminal/Gowen Field,BOI
@@ -30,9 +41,11 @@ Helena Regional Airport,HLN
 Lake Charles Regional Airport,LCH
 Ellison Onizuka Kona International At Keahole Airport,KOA
 Myrtle Beach International Airport,MYR
+Nantucket Memorial Airport,ACK
 Ronald Reagan Washington National Airport,DCA
 Atlantic City International Airport,ACY
 Pueblo Memorial Airport,PUB
+Kodiak Airport,ADQ
 Fort Lauderdale Hollywood International Airport,FLL
 Falls International Airport,INL
 Salt Lake City International Airport,SLC
@@ -47,6 +60,7 @@ Columbia Metropolitan Airport,CAE
 Pensacola Regional Airport,PNS
 William P Hobby Airport,HOU
 Pittsburgh International Airport,PIT
+Wiley Post Will Rogers Memorial Airport,BRW
 Miami International Airport,MIA
 Seattle Tacoma International Airport,SEA
 Lovell Field,CHA
@@ -56,13 +70,17 @@ Indianapolis International Airport,IND
 Westchester County Airport,HPN
 Yuma MCAS/Yuma International Airport,YUM
 Duluth International Airport,DLH
+Bethel Airport,BET
 Lihue Airport,LIH
 Richmond International Airport,RIC
 Shreveport Regional Airport,SHV
+Merle K (Mudhole) Smith Airport,CDV
 Norfolk International Airport,ORF
 Southeast Texas Regional Airport,BPT
 Savannah Hilton Head International Airport,SAV
+Nome Airport,OME
 St Petersburg Clearwater International Airport,PIE
+Deadhorse Airport,SCC
 San Antonio International Airport,SAT
 Greater Rochester International Airport,ROC
 Raleigh Durham International Airport,RDU
@@ -94,6 +112,7 @@ Gerald R. Ford International Airport,GRR
 Fresno Yosemite International Airport,FAT
 Nashville International Airport,BNA
 Laredo International Airport,LRD
+Ralph Wien Memorial Airport,OTZ
 La Guardia Airport,LGA
 Tallahassee Regional Airport,TLH
 Waco Regional Airport,ACT
@@ -129,13 +148,17 @@ Sioux Gateway Col. Bud Day Field,SUX
 John Glenn Columbus International Airport,CMH
 Texarkana Regional Webb Field,TXK
 Plattsburgh International Airport,PBG
+Ted Stevens Anchorage International Airport,ANC
 Robert Gray  Army Air Field Airport,GRK
 Bellingham International Airport,BLI
 Mobile Regional Airport,MOB
 Santa Fe Municipal Airport,SAF
 Scott AFB/Midamerica Airport,BLV
+Del Rio International Airport,DRT
 Southwest Florida International Airport,RSW
+King Salmon Airport,AKN
 John F Kennedy International Airport,JFK
+Cheyenne Regional Jerry Olson Field,CYS
 Stockton Metropolitan Airport,SCK
 Charleston Air Force Base-International Airport,CHS
 Reno Tahoe International Airport,RNO
@@ -149,6 +172,8 @@ Bradley International Airport,BDL
 Mc Allen Miller International Airport,MFE
 Lubbock Preston Smith International Airport,LBB
 Chicago O'Hare International Airport,ORD
+Fairbanks International Airport,FAI
+Watertown International Airport,ART
 Palm Springs International Airport,PSP
 Rick Husband Amarillo International Airport,AMA
 Wilmington International Airport,ILM
@@ -157,6 +182,7 @@ Tyler Pounds Regional Airport,TYR
 Baltimore/Washington International Thurgood Marshall Airport,BWI
 Alexandria International Airport,AEX
 Tulsa International Airport,TUL
+Sitka Rocky Gutierrez Airport,SIT
 Long Island Mac Arthur Airport,ISP
 Minneapolis-St Paul International/Wold-Chamberlain Airport,MSP
 Louis Armstrong New Orleans International Airport,MSY
@@ -186,7 +212,7 @@ Joe Foss Field Airport,FSD
 Manchester-Boston Regional Airport,MHT
 Louisville International Standiford Field,SDF
 Charlottesville Albemarle Airport,CHO
-Roanoke‰ÛÒBlacksburg Regional Airport,ROA
+Roanokeâ€“Blacksburg Regional Airport,ROA
 Blue Grass Airport,LEX
 Evansville Regional Airport,EVV
 Albuquerque International Sunport,ABQ
@@ -230,6 +256,7 @@ Barkley Regional Airport,PAH
 Glacier Park International Airport,FCA
 MBS International Airport,MBS
 Greater Binghamton/Edwin A Link field,BGM
+Petersburg James A Johnson Airport,PSG
 Orlando Sanford International Airport,SFB
 Missoula International Airport,MSO
 Eagle County Regional Airport,EGE
@@ -237,9 +264,11 @@ Columbus Metropolitan Airport,CSG
 Lawton Fort Sill Regional Airport,LAW
 Flagstaff Pulliam Airport,FLG
 Joslin Field Magic Valley Regional Airport,TWF
+Martha's Vineyard Airport,MVY
 St Cloud Regional Airport,STC
 Golden Triangle Regional Airport,GTR
 Erie International Tom Ridge Field,ERI
+Barnstable Municipal Boardman Polando Field,HYA
 Yeager Airport,CRW
 Wilkes Barre Scranton International Airport,AVP
 Bemidji Regional Airport,BJI
@@ -289,9 +318,12 @@ Portsmouth International at Pease Airport,PSM
 Rhinelander Oneida County Airport,RHI
 Southwest Wyoming Regional Airport,RKS
 San Luis County Regional Airport,SBP
+Salina Municipal Airport,SLN
 Santa Maria Pub/Capt G Allan Hancock Field,SMX
 Quincy Regional Baldwin Field,UIN
 Valdosta Regional Airport,VLD
+Adak Airport,ADK
+Gustavus Airport,GST
 Wrangell Airport,WRG
 Tri Cities Airport,PSC
 Worcester Regional Airport,ORH
@@ -300,17 +332,26 @@ Friedman Memorial Airport,SUN
 Phoenix-Mesa-Gateway Airport,AZA
 Hagerstown Regional Richard A Henson Field,HGR
 Delta County Airport,ESC
+Yakutat Airport,YAK
 Ford Airport,IMT
 Montrose Regional Airport,MTJ
 Brainerd Lakes Regional Airport,BRD
+Greenbrier Valley Airport,LWB
+Pitt Greenville Airport,PGV
+Branson Airport,BKG
 Charles M. Schulz Sonoma County Airport,STS
 Aspen-Pitkin Co/Sardy Field,ASE
 Hays Regional Airport,HYS
 Gunnison Crested Butte Regional Airport,GUC
 Charlotte County Airport,PGD
+Shenandoah Valley Regional Airport,SHD
 Devils Lake Regional Airport,DVL
+Yellowstone Airport,WYS
+Canyonlands Field,CNY
+Vernal Regional Airport,VEL
 Mammoth Yosemite Airport,MMH
 Provo Municipal Airport,PVU
 Northwest Florida Beaches International Airport,ECP
+Hilton Head Airport,HHH
 Ogden Hinckley Airport,OGD
 Stillwater Regional Airport,SWO
