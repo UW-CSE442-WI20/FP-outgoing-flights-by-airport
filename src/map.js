@@ -24,6 +24,17 @@ var data1 = Array();
 /* Sorted destination airports */
 var types = [];
 var ID_Name = new Map();
+d3.csv(getFile, function(d){
+    return {
+    type : d.AirPort,
+    code : d.AirID
+  };
+  }).then(function(data) {
+    for(var i = 0; i < data.length; i++){
+      var id = data[i].code;
+      ID_Name.set(id, data[i].type);
+    }
+  });
 
 // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 var map = L
@@ -54,6 +65,44 @@ d3.csv(airPorts).then(function(data) {
     draw_airports(data);
 });
 
+function draw_data(data){
+
+    data.forEach(function(d) {
+        destinations.push(d.Dest);
+        data1.push(d);
+
+        L.circle([d.O_lat,d.O_long], {
+            color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 25000,
+            Opacity: 0.2
+        }).addTo(map);
+
+        L.circle([d.D_lat,d.D_long], {
+            color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 30000,
+            Opacity: 0.2
+        }).on({
+            mouseover: onHover,
+            mouseout: offHover,
+            click: onMapClick,
+            dblclick: onMapClick
+        }).addTo(map).bringToFront();
+
+        let pointA = new L.LatLng(d.O_lat, d.O_long);
+        let pointB = new L.LatLng(d.D_lat, d.D_long);
+
+        let latlngs = Array();
+        latlngs.push(pointA);
+        latlngs.push(pointB);
+
+        L.polyline(latlngs, {color: 'blue', weight: 1}).addTo(map);
+    });
+    destinations = distinct_Types(destinations);
+}
 
 const csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
 
@@ -71,10 +120,10 @@ d3.csv(csvData).then(function(data) {
             d.D_long = +d.D_long
         }
     );
+
     draw_data(data.filter(function (row) {
         return row.Origin == parsed.airline
     }));
-
     var select = d3.select(".dropdown1")
       .append("div")
       .append("select")
@@ -103,11 +152,11 @@ d3.csv(csvData).then(function(data) {
         .append("option")
         .attr("class", "dropdown1")
         .attr("value", function (d) { return d; })
-        .text(function (d) { return toProperCase(d); });
+        .text(function (d) { return d; });
 });
 
 // --------------------------
-//
+// Dropdown list for airPort
 // --------------------------
 
 d3.csv(getFile, function(d){

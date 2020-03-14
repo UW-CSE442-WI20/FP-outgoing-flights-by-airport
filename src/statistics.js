@@ -69,7 +69,7 @@ d3.csv(csvData).then(function(data) {
     });
 
   const results = data.filter(function (row) {
-    return (row.Origin == parsed.origin && row.Dest == parsed.dest) // Need to change ariports based on selection
+    return (row.Origin == parsed.origin && row.Dest == parsed.dest) 
   });
 
     console.log(results);
