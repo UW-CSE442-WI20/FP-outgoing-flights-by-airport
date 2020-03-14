@@ -147,7 +147,7 @@ d3.csv(csvData).then(function(data) {
 
 
     select.selectAll("option")
-        .data(types)
+        .data(destinations)
         .enter()
         .append("option")
         .attr("class", "dropdown1")
