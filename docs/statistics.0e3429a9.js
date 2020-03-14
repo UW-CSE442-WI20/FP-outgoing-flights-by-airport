@@ -29507,6 +29507,7 @@ function updateData(month) {
   draw(csvData);
 }
 
+draw(csvData);
 window.updateData = updateData;
 },{"d3":"../node_modules/d3/index.js","query-string":"../node_modules/query-string/index.js","../static/months/jan.csv":"../static/months/jan.csv","../static/months/feb.csv":"../static/months/feb.csv","../static/months/march.csv":"../static/months/march.csv","../static/months/april.csv":"../static/months/april.csv","../static/months/may.csv":"../static/months/may.csv","../static/months/june.csv":"../static/months/june.csv","../static/months/july.csv":"../static/months/july.csv","../static/months/august.csv":"../static/months/august.csv","../static/months/sept.csv":"../static/months/sept.csv","../static/months/oct.csv":"../static/months/oct.csv","../static/months/nov.csv":"../static/months/nov.csv","../static/months/dec.csv":"../static/months/dec.csv"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -29536,7 +29537,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59607" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56300" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

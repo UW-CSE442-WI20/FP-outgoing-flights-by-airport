@@ -29253,6 +29253,7 @@ function updateData(month) {
   draw(csvData);
 }
 
+draw(csvData);
 window.updateData = updateData;
 },{"d3":"UzF0","query-string":"FvpG","../static/months/jan.csv":"q1jX","../static/months/feb.csv":"LPQa","../static/months/march.csv":"vcIA","../static/months/april.csv":"CKus","../static/months/may.csv":"Es5Q","../static/months/june.csv":"BABy","../static/months/july.csv":"g4cs","../static/months/august.csv":"AZAq","../static/months/sept.csv":"ubfj","../static/months/oct.csv":"k9Mg","../static/months/nov.csv":"B4fn","../static/months/dec.csv":"imWV"}]},{},["iwL0"], null)
-//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/statistics.cd7d6de5.js.map
+//# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/statistics.bd182a2d.js.map

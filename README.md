@@ -2,7 +2,7 @@
 
 # Final Project Starter template
 
-The starter code for creating interactive visualization prototypes.
+[Link to the final project](https://uw-cse442-wi20.github.io/FP-outgoing-flights-by-airport/)
 
 ## Getting Started
 
