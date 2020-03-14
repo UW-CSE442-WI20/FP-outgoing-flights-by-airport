@@ -98,7 +98,7 @@ d3.csv(csvData).then(function(data) {
     });
 
   const results = data.filter(function (row) {
-    return (row.Origin == parsed.airline)
+    return (row.Origin == parsed[0].airline)
   });
 
     console.log(results);

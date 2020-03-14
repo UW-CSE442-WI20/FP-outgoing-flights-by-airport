@@ -24,6 +24,17 @@ var data1 = Array();
 /* Sorted destination airports */
 var types = [];
 var ID_Name = new Map();
+d3.csv(getFile, function(d){
+    return {
+    type : d.AirPort,
+    code : d.AirID
+  };
+  }).then(function(data) {
+    for(var i = 0; i < data.length; i++){
+      var id = data[i].code;
+      ID_Name.set(id, data[i].type);
+    }
+  });
 
 // Used leaflet for map display: https://www.d3-graph-gallery.com/graph/backgroundmap_leaflet.html
 var map = L
@@ -54,86 +65,6 @@ d3.csv(airPorts).then(function(data) {
     draw_airports(data);
 });
 
-
-const csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
-
-d3.csv(csvData).then(function(data) {
-    data.forEach(function(d) {
-            d.Origin = d.Origin;
-            d.Dest = d.Dest
-            d.Time = +d.Time
-            d.Distance = +d.Distance
-            d.Count = +d.Count
-
-            d.O_lat = +d.O_lat
-            d.O_long = +d.O_long
-            d.D_lat = +d.D_lat
-            d.D_long = +d.D_long
-        }
-    );
-    draw_data(data.filter(function (row) {
-        return row.Origin == parsed.airline
-    }));
-
-    var select = d3.select(".dropdown1")
-      .append("div")
-      .append("select")
-
-      select
-      .on("change", function(d) {
-        var address = 'statistics.html?airline=';
-        var AirPort = d3.select(this).property("value");
-        d3.csv(getFile, function(d){
-          if (d.AirPort == AirPort) {
-              return d.AirID;
-        }}).then(v => {
-            address = address.concat(v);
-            //console.log(address);
-            window.location.href = address;
-        })
-        //
-      });
-
-
-    select.selectAll("option")
-        .data(types)
-        .enter()
-        .append("option")
-        .attr("class", "dropdown1")
-        .attr("value", function (d) { return d; })
-        .text(function (d) { return toProperCase(d); });
-});
-
-d3.csv(getFile, function(d){
-    return {
-    type : d.AirPort,
-    code : d.AirID
-  };
-  }).then(function(data) {
-    for(var i = 0; i < data.length; i++){
-      var id = data[i].code;
-      ID_Name.set(id, data[i].type);
-    }
-  });
-
-function distinct_Types(rows) {
-  for(var i = 0; i < rows.length; i++) {
-    types[i] = ID_Name.get(rows[i]);
-  }
-  types = [...new Set(types)].sort();
-  types.unshift("Please Select an AirPort");
-  //console.log(types)
-  return types;
-}
-
-function toProperCase(value) {
-  var words = value.split(" ");
-  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
-  for (var i = 1; i < words.length; i++) {
-    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
-  }
-  return result;
-}
 function draw_data(data){
 
     data.forEach(function(d) {
@@ -173,6 +104,78 @@ function draw_data(data){
     destinations = distinct_Types(destinations);
 }
 
+const csvData = require('../static/2018_grouped_no_dates_with_cords.csv');
+
+d3.csv(csvData).then(function(data) {
+    data.forEach(function(d) {
+            d.Origin = d.Origin;
+            d.Dest = d.Dest
+            d.Time = +d.Time
+            d.Distance = +d.Distance
+            d.Count = +d.Count
+
+            d.O_lat = +d.O_lat
+            d.O_long = +d.O_long
+            d.D_lat = +d.D_lat
+            d.D_long = +d.D_long
+        }
+    );
+
+    draw_data(data.filter(function (row) {
+        return row.Origin == parsed.airline
+    }));
+    var select = d3.select(".dropdown1")
+      .append("div")
+      .append("select")
+
+      select
+      .on("change", function(d) {
+        var address = []//'statistics.html?airline=';
+        address[0] = 'statistics.html?airline=';
+        address[1] = 'statistics.html?frdest='
+       // var fromOrigin = 'statistics.html?frdest=';
+        var AirPort = d3.select(this).property("value");
+        d3.csv(getFile, function(d){
+          if (d.AirPort == AirPort) {
+              return d.AirID;
+        }}).then(v => {
+            address[0] = address[0].concat(v);
+            address[1]= address[1].concat(parsed.airline);
+            //console.log(address);
+           // window.location.href = fromOrigin;
+            window.location.href = address[0];
+        })
+        //
+      });
+
+
+    select.selectAll("option")
+        .data(types)
+        .enter()
+        .append("option")
+        .attr("class", "dropdown1")
+        .attr("value", function (d) { return d; })
+        .text(function (d) { return d; });
+});
+
+function distinct_Types(rows) {
+  for(var i = 0; i < rows.length; i++) {
+    types[i] = ID_Name.get(rows[i]);
+  }
+  types = [...new Set(types)].sort();
+  types.unshift("Please Select an AirPort");
+  //console.log(types)
+  return types;
+}
+
+function toProperCase(value) {
+  var words = value.split(" ");
+  var result = words[0].substring(0, 1).toUpperCase() + words[0].substring(1, words[0].length).toLowerCase();
+  for (var i = 1; i < words.length; i++) {
+    result += " " + words[i].substring(0, 1).toUpperCase() + words[i].substring(1, words[i].length).toLowerCase();
+  }
+  return result;
+}
 
 /*
 Function to draw the airports that are gotten from the airports csv file
@@ -261,9 +264,9 @@ info.update = function (props) {
     temp = data1.filter(function (row) {
         return row.D_lat == props.lat && row.D_long == props.lng
     })
-    console.log(temp);
-    console.log(temp.Count);
-    console.log(temp.Origin);
+    // console.log(temp);
+    // console.log(temp.Count);
+    // console.log(temp.Origin);
 
     this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
         '<b>' + props.lat + '</b><br />' + props.lng + ' people / mi<sup>2</sup>'
@@ -325,8 +328,8 @@ function tallyData() {
                 airportMaxCount = value;
             }
         });
-        console.log(totalFlightTime);
-        console.log(totalCount);
+        // console.log(totalFlightTime);
+        // console.log(totalCount);
         document.getElementById("airportCount").innerText = map.size;
         document.getElementById("airportMost").innerText = airportMaxID;
         document.getElementById("airportMostNum").innerText = airportMaxCount;
