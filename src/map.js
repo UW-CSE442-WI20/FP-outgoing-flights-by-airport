@@ -270,15 +270,21 @@ info.update = function (props) {
         this._div.innerHTML = '<h4>Flight Info</h4>' + 'Hover over a destination'
         return
     }
-    temp = data1.filter(function (row) {
-        return row.D_lat == props.lat && row.D_long == props.lng
-    })
-    console.log(temp);
-    console.log(temp.Count);
-    console.log(temp.Origin);
+    let closest_point = data1[0];
+    let min_distance = 10000000000000000;
+    data1.forEach(function (d) {
+        let latlngs = Array();
+        latlngs.push(d.D_lat);
+        latlngs.push(d.D_long);
+        if (props.distanceTo(latlngs) < min_distance){
+            min_distance = props.distanceTo(latlngs);
+            closest_point = d;
+        }
+    });
 
     this._div.innerHTML = '<h4>Flight Info</h4>' +  (props ?
-        '<b>' + props.lat + '</b><br />' + props.lng + ' people / mi<sup>2</sup>'
+        '<b>' + "Airport: " + closest_point.Dest + '</b><br />' + closest_point.Count + ' flights' + '</b><br />' +
+        closest_point.Time.toFixed(0) + ' minutes' + '</b><br />' + closest_point.Distance.toFixed(0) + ' miles'
         : 'Hover over a destination');
 };
 
