@@ -106,6 +106,10 @@ d3.csv(csvData).then(function(data) {
         .text(function (d) { return toProperCase(d); });
 });
 
+// --------------------------
+//
+// --------------------------
+
 d3.csv(getFile, function(d){
     return {
     type : d.AirPort,
@@ -136,6 +140,10 @@ function toProperCase(value) {
   }
   return result;
 }
+
+// --------------------------
+// Drawing Functions Below
+// --------------------------
 function draw_data(data){
 
     data.forEach(function(d) {
@@ -225,8 +233,10 @@ function onHover(l) {
 function offHover(l) {
     info.update();
 }
-// --------------------------
 
+// --------------------------
+// Map Instruction Pane Below
+// --------------------------
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
