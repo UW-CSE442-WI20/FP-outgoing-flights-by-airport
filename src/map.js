@@ -280,36 +280,28 @@ info.addTo(map);
 const airportID = parsed.airline;
 
 setTimeout(function() {
-    document.getElementById("airportName").innerHTML = "<Selected airport>";
-    d3.csv(getFile).then(function(data) {
-        data.forEach(function(d) {
-            d.Airline = d.Airline
-            d.AirID = d.AirID
-
-            if (d.AirID == airportID) {
-                document.getElementById("airportName").innerHTML = d.AirPort;
-               // console.log(d.AirPort);
-            }
-        });
-    });
+    document.getElementById("airportName").innerHTML = ID_Name.get(airportID);
     tallyData();
 }, 500);
 
 function tallyData() {
     d3.csv(csvData).then(function(data) {
+        // map holds, key: dest airport, value: num of flights to key airport
         const map = new Map();
         let totalCount = 0;
         let totalFlightTime = 0.0;
+
+        // finding all flights where origin is selected airport
         data.forEach(function(d) {
             if(d.Origin === airportID) {
-                // count++;
-                // Is 'count' in the CSV the num of flights?
+                // incrementing total count by the flight count
                 let count = parseInt(d.Count);
                 totalCount += count;
 
+                // incrementing total flight time by the flight time and num of flights
                 totalFlightTime += parseFloat(d.Time) * count;
 
-                // tallying counts for each airport
+                // tallying counts for each dest airport
                 if (map.has(d.Dest)) {
                     let prev = map.get(d.Dest);
                     map.set(d.Dest, prev + count);
@@ -319,6 +311,7 @@ function tallyData() {
             }
         });
 
+        // finding dest airport with most flights from origin
         let airportMaxID = "";
         let airportMaxCount = 0;
         map.forEach(function(value, key, map) {
@@ -327,8 +320,8 @@ function tallyData() {
                 airportMaxCount = value;
             }
         });
-        console.log(totalFlightTime);
-        console.log(totalCount);
+
+        // updating values to display on html
         document.getElementById("airportCount").innerText = map.size;
         document.getElementById("airportMost").innerText = airportMaxID;
         document.getElementById("airportMostNum").innerText = airportMaxCount;
